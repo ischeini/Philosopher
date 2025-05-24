@@ -18,13 +18,7 @@ int	ft_error(char *str)
 	return (0);
 }
 
-static int	ft_isdigit(char c)
-{
-	if (c >= '0' && c <= '9')
-		return ()
-}
-
-int	ft_check_atoul(t_philosopher philosopher, int argc)
+int	ft_check_atoul(t_philosopher *philosopher, int argc)
 {
 	if (philosopher->philosophers == 0)
 		return (ft_error("Philosphers: Number invalid"));
@@ -39,6 +33,7 @@ int	ft_check_atoul(t_philosopher philosopher, int argc)
 		if (philosopher->times_to_eat == 0)
 			return (ft_error("Philosopher: No need to eat"));
 	}
+	return (1);
 }
 
 unsigned long	ft_atoul(const char *str)
@@ -50,15 +45,15 @@ unsigned long	ft_atoul(const char *str)
 	i = 0;
 	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
-	if (str[i] == +)
+	if (str[i] == '+')
 		i++;
 	else if (str[i] == '-')
-		return (ft_error("Args: Negative number"));
+		return (ft_error("Negative number"));
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		if (restult > (ULONG_MAX - (str[i] - '0')) / 10)
+		if (result > (ULLONG_MAX - (str[i] - '0')) / 10)
 			return (0);
-		result *= 10 + (str[i] - '0');
+		result = result * 10 + (str[i] - '0');
 		i++;
 	}
 	return (result);
@@ -75,11 +70,11 @@ int	ft_check_args(char **args)
 		j = 0;
 		while (args[i][j])
 		{
-			if (args[i][j] >= '0' && args[i][j] <= '9')
+			if (args[i][j] < '0' && args[i][j] > '9')
 				return (ft_error("Args: No numbers"));
 			j++;
 		}
 		i++;
 	}
-	return (0);
+	return (1);
 }
