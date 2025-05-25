@@ -6,21 +6,24 @@ OBJDIR = obj/
 FLAGS = -Wall -Wextra -Werror
 
 SRC	=	${SRCDIR}philosopher.c			\
+		${SRCDIR}philosopher_init.c		\
 		${SRCDIR}philosopher_utils.c	\
 		${SRCDIR}philosopher_times.c	\
+		${SRCDIR}philosopher_table.c	\
+		${SRCDIR}philosopher_error.c	\
 
 OBJ = ${SRC:${SRCDIR}%.c=${OBJDIR}%.o}
 
 all:${NAME}
 
 ${NAME}: ${OBJ}
-	@cc ${FLAGS} -o ${NAME} ${OBJ}
+	@gcc ${FLAGS} -o ${NAME} ${OBJ}
 
 ${OBJDIR}:
 	@mkdir -p $@
 
 ${OBJDIR}%.o: ${SRCDIR}%.c | ${OBJDIR}
-	@cc ${FLAGS} -c $< -o $@
+	@gcc ${FLAGS} -c $< -o $@
 
 clean:
 	@rm -rf ${OBJDIR}

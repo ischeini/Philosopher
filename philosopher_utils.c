@@ -12,33 +12,9 @@
 
 #include "philosopher.h"
 
-int	ft_error(char *str)
+size_t	ft_atoul(const char *str)
 {
-	printf("%s\n", str);
-	return (0);
-}
-
-int	ft_check_atoul(t_philosopher *philosopher, int argc)
-{
-	if (philosopher->philosophers == 0)
-		return (ft_error("Philosphers: Number invalid"));
-	if (philosopher->die == 0)
-		return (ft_error("Die: Number invalid"));
-	if (philosopher->eat == 0)
-		return (ft_error("Eat: Number invalid"));
-	if (philosopher->sleep == 0)
-		return (ft_error("Sleep: Number invalid"));
-	if (argc == 6)
-	{
-		if (philosopher->times_to_eat == 0)
-			return (ft_error("Philosopher: No need to eat"));
-	}
-	return (1);
-}
-
-unsigned long	ft_atoul(const char *str)
-{
-	unsigned long	result;
+	size_t	result;
 	int				i;
 
 	result = 0;

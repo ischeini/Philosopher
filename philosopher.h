@@ -20,47 +20,52 @@
 # include <unistd.h>
 # include <stdio.h>
 
-typedef struct s_philosopher
-{
-	pthread_t		philosophers;//soul
-	size_t			last_meal;//if > == die | FAIL
-	int				has_forks;//false if (has_fork){ ft_eat(philo)}
-	int				meals_eaten;
-}	t_philosopher;
-
 typedef	struct s_fork
 {
-	int	table;//if 0 (no table) else (on table)
+	struct s_fork	*next;
+	int				table;
 }	t_fork;
 
-typedef struct s_philo//t_list -- Function 1st priority;
+typedef struct s_soul
 {
-	t_philosopher	philosopher;//void *content //philosopher
-	t_fork			*left_fork; //forks[0]
-	t_fork			*right_fork; //forks[1]//grab_forks(philo) phil
-	struct s_philo	*next;//struct s_list *next; struct s_list *prev;
+	pthread_t		philosophers;
+	size_t			last_meal;
+	int				has_forks;
+	int				meals_eaten;
+}	t_soul;
+
+typedef struct s_philo
+{
 	struct s_philo	*back;
+	struct s_philo	*next;
+	t_soul			*soul;
+	t_fork			*left_fork;
+	t_fork			*right_fork;
 }	t_philo;
 
 typedef struct s_table
 {
-	t_fork			**forks;// == philosophers 0 - 1
+	t_philo			*head;
+	t_fork			**forks;
 	size_t			sleep;
 	size_t			eat;
 	size_t			die;
-	int				philosophers;//b
-	int				times_to_eat;//b
-	t_philo		*first;//t_list **head;
+	size_t			philosophers;
+	size_t			times_to_eat;
 }t_table;
-
-
 
 unsigned long	ft_atoul(const char *str);
 
-int			ft_check_atoul(t_philosopher *philosopher, int argc);
+t_philo			**ft_start_philosophers(t_table *table);
 
-int			ft_check_args(char **args);
+t_table			*ft_init_table(int argc, char **args);
 
-int			ft_error(char *str);
+void			ft_lstclear_soul(t_philo **philo);
+
+void			ft_lstclear_fork(t_fork **fork);
+
+int				ft_error(char *str);
+
+int				ft_check_args(char **args);
 
 #endif

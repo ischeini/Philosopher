@@ -12,65 +12,54 @@
 
 #include "philosopher.h"
 
-static int	ft_create_table(void)
+void	print_list(t_fork *head)
 {
-
-}
-
-static t_philo	*ft_start_simulation(philosophers)
-{
-	t_philo	**table;
-
-	table = malloc(1 * sizeof(t_table));
-	if (!table)
-		return (NULL);
-	table[0] = 
-	table->forks = 0;
-	table->philosophers	
-	
-}
-
-static t_philosopher	*ft_init_table(int argc, char **args)
-{
-	t_table	*table;
-
-	table = malloc(1 * sizeof(t_philosopher));
-	if (!table)
-		return (NULL);
-	table->philosophers = ft_atoul(args[1]);
-	table->die = ft_atoul(args[2]);
-	table->eat = ft_atoul(args[3]);
-	table->sleep = ft_atoul(args[4]);
-	if (argc == 6)
-		table->times_to_eat = ft_atoul(args[5]);
-	if (!ft_check_atoul(table, argc))
+	while (head)
 	{
-		free(table);
-		return (NULL);
+		printf("Valor: %d\n", head->table);
+		head = head->next;
 	}
-	return (table);
 }
+
+/*void	print_soul_list(t_soul *head)
+{
+	int i = 1;
+	while (head)
+	{
+		printf("Philosopher #%d:\n", i);
+		printf("  Last meal time: %zu\n", head->last_meal);
+		printf("  Has forks: %s\n", head->has_forks ? "Yes" : "No");
+		printf("  Meals eaten: %d\n", head->meals_eaten);
+		i++;
+	}
+}*/
 
 int	main(int argc, char **args)
 {
-	t_philosopher	*philosopher;
-	t_table			*table;
+	t_philo	**philos;
+	t_table	*table;
 
 	if (argc <= 4 || argc >= 7)
 		return (ft_error("Argv: Amount"));
 	if (!ft_check_args(args))
 		return (1);
-	philosopher = ft_init_table(argc, args);
-	if (!philosopher)
-		return (1);
-	//printf("times_to_eat : %d \n", philosopher->times_to_eat);
-	//printf("philosopher : %d \n", philosopher->philosophers);
-	//printf("sleep : %zu \n", philosopher->sleep);
-	//printf("die : %zu \n", philosopher->die);
-	//printf("eat : %zu \n", philosopher->eat);
-	table = ft_start_simulation(philosopher);
+	table = ft_init_table(argc, args);
 	if (!table)
 		return (1);
-	free(philosopher);
+	printf("times_to_eat : %zu \n", table->times_to_eat);
+	printf("philosopher : %zu \n", table->philosophers);
+	printf("sleep : %zu \n", table->sleep);
+	printf("die : %zu \n", table->die);
+	printf("eat : %zu \n", table->eat);
+	print_list(table->forks[0]);
+	philos = ft_start_philosophers(table);
+	if (!philos)
+	{
+		free(table);
+		return (1);
+	}
+	ft_lstclear_fork(table->forks);
+	ft_lstclear_soul(philos);
+	free(philos);
 	free(table);
 }
