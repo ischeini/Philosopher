@@ -12,9 +12,9 @@
 
 #include "philosopher.h"
 
-size_t	ft_atoul(const char *str)
+int	ft_atoi(const char *str)
 {
-	size_t	result;
+	int	result;
 	int				i;
 
 	result = 0;

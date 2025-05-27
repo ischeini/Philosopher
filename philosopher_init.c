@@ -6,17 +6,27 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:59:51 by ischeini          #+#    #+#             */
-/*   Updated: 2025/05/26 14:05:31 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:51:27 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 
-static t_philo	*ft_newphilo(t_fork **fork, t_table *table, size_t i)
+static void	ft_create_mutex(t_philo **philo)
+{
+	t_philo	*tmp;
+
+	tmp = philo[0];
+	
+	pthread_mutex_init();
+	
+}
+
+static t_philo	*ft_newphilo(t_fork **fork, t_table *table, int i)
 {
 	t_philo	*philo;
 	t_fork	*tmp_fork;
-	size_t	j;
+	int		j;
 
 	j = -1;
 	tmp_fork = fork[0];
@@ -38,13 +48,18 @@ static t_philo	*ft_newphilo(t_fork **fork, t_table *table, size_t i)
 	philo->soul->last_meal = table->die;
 	philo->soul->meals_eaten = 0;
 	philo->soul->has_forks = 0;
-	philo->next = NULL;
-	philo->back = NULL;
 	return (philo);
 }
 
 static void	ft_lstadd_philo(t_philo **philo, t_philo *new)
 {
+	new->times_to_eat = philo[0]->times_to_eat;
+	new->sleep = philo[0]->sleep;
+	new->die = philo[0]->die;
+	new->eat = philo[0]->eat;
+	new->you_eat = 0;
+	new->next = NULL;
+	new->back = NULL;
 	if (!*philo)
 	{
 		*philo = new;
@@ -55,13 +70,13 @@ static void	ft_lstadd_philo(t_philo **philo, t_philo *new)
 	*philo = new;
 }
 
-static void	ft_sit_philo(t_philo **philo, size_t philosophers)
+static void	ft_sit_philo(t_philo **philo, int philosophers)
 {
 	t_philo	*current;
 	t_philo	*first;
 	t_philo	*prev;
 	t_philo	*last;
-	size_t	i;
+	int		i;
 
 	i = -1;
 	first = *philo;
@@ -87,7 +102,7 @@ t_philo	**ft_start_philosophers(t_table *table)
 {
 	t_philo	**philos;
 	t_philo	*next_philo;
-	size_t	i;
+	int		i;
 
 	philos = (t_philo **)malloc(sizeof(t_philo *));
 	if (!philos)
@@ -108,5 +123,6 @@ t_philo	**ft_start_philosophers(t_table *table)
 		ft_lstadd_philo(philos, next_philo);
 	}
 	ft_sit_philo(philos, table->philosophers);
+	ft_create_mutex(philos);
 	return (philos);
 }

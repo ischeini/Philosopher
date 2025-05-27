@@ -6,7 +6,7 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:34:21 by ischeini          #+#    #+#             */
-/*   Updated: 2025/05/26 14:01:55 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:43:16 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ void	ft_lstclear_fork(t_fork **fork)
 	free(fork);
 }
 
-void	ft_lstclear_soul(t_philo **philo, size_t philosophers)
+void	ft_lstclear_soul(t_philo **philo, int philosophers)
 {
 	t_philo	*tmp;
-	size_t	i;
+	int		i;
 
 	i = 0;
 	while (*philo && i++ < philosophers)

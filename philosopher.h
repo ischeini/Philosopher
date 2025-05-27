@@ -22,6 +22,7 @@
 
 typedef	struct s_fork
 {
+	pthread_mutex_t	mutex;
 	struct s_fork	*next;
 	int				table;
 }	t_fork;
@@ -29,9 +30,10 @@ typedef	struct s_fork
 typedef struct s_soul
 {
 	pthread_t		philosophers;
-	size_t			last_meal;
+	int				last_meal;
 	int				has_forks;
 	int				meals_eaten;
+	int				dead;
 }	t_soul;
 
 typedef struct s_philo
@@ -41,17 +43,22 @@ typedef struct s_philo
 	t_soul			*soul;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
+	int				die;
+	int				sleep;
+	int				times_to_eat;
+	int				you_eat;
+	int				eat;
 }	t_philo;
 
 typedef struct s_table
 {
 	t_philo			*head;
 	t_fork			**forks;
-	size_t			sleep;
-	size_t			eat;
-	size_t			die;
-	size_t			philosophers;
-	size_t			times_to_eat;
+	int				sleep;
+	int				eat;
+	int				die;
+	int				philosophers;
+	int				times_to_eat;
 }t_table;
 
 unsigned long	ft_atoul(const char *str);
@@ -60,7 +67,7 @@ t_philo			**ft_start_philosophers(t_table *table);
 
 t_table			*ft_init_table(int argc, char **args);
 
-void			ft_lstclear_soul(t_philo **philo, size_t philosophers);
+void			ft_lstclear_soul(t_philo **philo, int philosophers);
 
 void			ft_lstclear_fork(t_fork **fork);
 

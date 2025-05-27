@@ -6,7 +6,7 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:19:39 by ischeini          #+#    #+#             */
-/*   Updated: 2025/05/26 13:31:17 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:43:05 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ static void	ft_lstadd_fork(t_fork **forks, t_fork *new)
 	forks[0] = new;
 }
 
-static t_fork	**ft_put_forks(size_t philosophers)
+static t_fork	**ft_put_forks(int philosophers)
 {
 	t_fork	**forks;
 	t_fork	*next_forks;
-	size_t	i;
+	int	i;
 
 	forks = (t_fork **)malloc(1 * sizeof(t_fork *));
 	if (!forks)
