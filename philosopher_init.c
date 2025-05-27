@@ -6,21 +6,11 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:59:51 by ischeini          #+#    #+#             */
-/*   Updated: 2025/05/27 16:51:27 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:16:04 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
-
-static void	ft_create_mutex(t_philo **philo)
-{
-	t_philo	*tmp;
-
-	tmp = philo[0];
-	
-	pthread_mutex_init();
-	
-}
 
 static t_philo	*ft_newphilo(t_fork **fork, t_table *table, int i)
 {
@@ -37,7 +27,7 @@ static t_philo	*ft_newphilo(t_fork **fork, t_table *table, int i)
 		return (NULL);
 	philo->left_fork = tmp_fork;
 	if (i == table->philosophers)
-		i = 0;
+		tmp_fork->next = fork[0];
 	philo->right_fork = tmp_fork->next;
 	philo->soul = malloc(sizeof(t_soul));
 	if (!philo->soul)
@@ -51,12 +41,14 @@ static t_philo	*ft_newphilo(t_fork **fork, t_table *table, int i)
 	return (philo);
 }
 
-static void	ft_lstadd_philo(t_philo **philo, t_philo *new)
+static void	ft_lstadd_philo(t_philo **philo, t_philo *new, int i)
 {
 	new->times_to_eat = philo[0]->times_to_eat;
 	new->sleep = philo[0]->sleep;
+	new->soul->philosophers = i;
 	new->die = philo[0]->die;
 	new->eat = philo[0]->eat;
+	new->soul->dead = 1;
 	new->you_eat = 0;
 	new->next = NULL;
 	new->back = NULL;
@@ -120,9 +112,9 @@ t_philo	**ft_start_philosophers(t_table *table)
 			ft_lstclear_soul(philos, i);
 			return (NULL);
 		}
-		ft_lstadd_philo(philos, next_philo);
+		ft_lstadd_philo(philos, next_philo, i);
+		pthread_mutex_init(next_philo->left_fork->mutex, NULL);
 	}
 	ft_sit_philo(philos, table->philosophers);
-	ft_create_mutex(philos);
 	return (philos);
 }

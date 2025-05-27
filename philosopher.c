@@ -16,7 +16,9 @@ int	main(int argc, char **args)
 {
 	t_philo	**philos;
 	t_table	*table;
+	int		i;
 
+	i = 0;
 	if (argc <= 4 || argc >= 7)
 		return (ft_error("Argv: Amount"));
 	if (!ft_check_args(args))
@@ -30,9 +32,10 @@ int	main(int argc, char **args)
 		free(table);
 		return (1);
 	}
-	ft_start_simulation(philos, table);
+	//if (!ft_start_simulation(philos, table))
+	//	i = 1;
 	ft_lstclear_fork(table->forks);
 	ft_lstclear_soul(philos, table->philosophers);
 	free(table);
-	return (0);
+	return (i);
 }

@@ -81,7 +81,7 @@ static void	*ft_start(void *soul)
 		ft_infinite(tmp);
 }
 
-int	ft_initi_pthread(t_philo **philo, t_table *table)
+static int	ft_initi_pthread(t_philo **philo, t_table *table)
 {
 	t_philo	*tmp;
 	int		i;	

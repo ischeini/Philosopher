@@ -22,7 +22,7 @@
 
 typedef	struct s_fork
 {
-	pthread_mutex_t	mutex;
+	pthread_mutex_t	*mutex;
 	struct s_fork	*next;
 	int				table;
 }	t_fork;
@@ -61,8 +61,6 @@ typedef struct s_table
 	int				times_to_eat;
 }t_table;
 
-unsigned long	ft_atoul(const char *str);
-
 t_philo			**ft_start_philosophers(t_table *table);
 
 t_table			*ft_init_table(int argc, char **args);
@@ -71,8 +69,10 @@ void			ft_lstclear_soul(t_philo **philo, int philosophers);
 
 void			ft_lstclear_fork(t_fork **fork);
 
-int				ft_error(char *str);
-
 int				ft_check_args(char **args);
+
+int				ft_atoi(const char *str);
+
+int				ft_error(char *str);
 
 #endif

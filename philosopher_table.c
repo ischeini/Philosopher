@@ -6,7 +6,7 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:19:39 by ischeini          #+#    #+#             */
-/*   Updated: 2025/05/27 14:43:05 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:05:39 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,12 @@ t_table	*ft_init_table(int argc, char **args)
 	table = malloc(1 * sizeof(t_table));
 	if (!table)
 		return (NULL);
-	table->philosophers = ft_atoul(args[1]);
-	table->sleep = ft_atoul(args[4]);
-	table->die = ft_atoul(args[2]);
-	table->eat = ft_atoul(args[3]);
+	table->philosophers = ft_atoi(args[1]);
+	table->sleep = ft_atoi(args[4]);
+	table->die = ft_atoi(args[2]);
+	table->eat = ft_atoi(args[3]);
 	if (argc == 6)
-		table->times_to_eat = ft_atoul(args[5]);
+		table->times_to_eat = ft_atoi(args[5]);
 	if (!ft_check_table(table, argc))
 	{
 		free(table);

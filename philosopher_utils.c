@@ -27,7 +27,7 @@ int	ft_atoi(const char *str)
 		return (ft_error("Negative number"));
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		if (result > (ULLONG_MAX - (str[i] - '0')) / 10)
+		if (result > (INT_MAX - (str[i] - '0')) / 10)
 			return (0);
 		result = result * 10 + (str[i] - '0');
 		i++;

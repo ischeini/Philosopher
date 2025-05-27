@@ -8,7 +8,6 @@ FLAGS = -Wall -Wextra -Werror -g
 SRC	=	${SRCDIR}philosopher.c			\
 		${SRCDIR}philosopher_init.c		\
 		${SRCDIR}philosopher_utils.c	\
-		${SRCDIR}philosopher_times.c	\
 		${SRCDIR}philosopher_table.c	\
 		${SRCDIR}philosopher_error.c	\
 

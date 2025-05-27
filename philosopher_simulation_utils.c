@@ -12,4 +12,23 @@
 
 #include "philosopher.h"
 
-int	ft_grab_fork()
+int	ft_philo_alive(t_philo *philo)
+{
+	t_philo	*tmp;
+	int		i;
+
+	tmp = philo;
+	i = tmp->soul->philosophers;
+	if (!tmp->soul->dead)
+		return (0);
+	else
+		tmp = tmp->next;
+	while (i != tmp->soul->philosophers)
+	{
+		if (!tmp->soul->dead)
+			return (0);
+		else
+			tmp = tmp->next;
+	}
+	return (1);
+}
