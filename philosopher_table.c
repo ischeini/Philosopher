@@ -6,7 +6,7 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:19:39 by ischeini          #+#    #+#             */
-/*   Updated: 2025/05/25 17:58:18 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/05/26 13:31:17 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ t_table	*ft_init_table(int argc, char **args)
 		free(table);
 		return (NULL);
 	}
+	if (argc == 5)
+		table->times_to_eat = 0;
 	table->forks = ft_put_forks(table->philosophers);
 	if (!table->forks)
 	{

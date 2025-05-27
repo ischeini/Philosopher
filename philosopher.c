@@ -12,28 +12,6 @@
 
 #include "philosopher.h"
 
-void	print_list(t_fork *head)
-{
-	while (head)
-	{
-		printf("Valor: %d\n", head->table);
-		head = head->next;
-	}
-}
-
-/*void	print_soul_list(t_soul *head)
-{
-	int i = 1;
-	while (head)
-	{
-		printf("Philosopher #%d:\n", i);
-		printf("  Last meal time: %zu\n", head->last_meal);
-		printf("  Has forks: %s\n", head->has_forks ? "Yes" : "No");
-		printf("  Meals eaten: %d\n", head->meals_eaten);
-		i++;
-	}
-}*/
-
 int	main(int argc, char **args)
 {
 	t_philo	**philos;
@@ -46,20 +24,15 @@ int	main(int argc, char **args)
 	table = ft_init_table(argc, args);
 	if (!table)
 		return (1);
-	printf("times_to_eat : %zu \n", table->times_to_eat);
-	printf("philosopher : %zu \n", table->philosophers);
-	printf("sleep : %zu \n", table->sleep);
-	printf("die : %zu \n", table->die);
-	printf("eat : %zu \n", table->eat);
-	print_list(table->forks[0]);
 	philos = ft_start_philosophers(table);
 	if (!philos)
 	{
 		free(table);
 		return (1);
 	}
+	ft_start_simulation(philos, table);
 	ft_lstclear_fork(table->forks);
-	ft_lstclear_soul(philos);
-	free(philos);
+	ft_lstclear_soul(philos, table->philosophers);
 	free(table);
+	return (0);
 }

@@ -60,7 +60,7 @@ t_philo			**ft_start_philosophers(t_table *table);
 
 t_table			*ft_init_table(int argc, char **args);
 
-void			ft_lstclear_soul(t_philo **philo);
+void			ft_lstclear_soul(t_philo **philo, size_t philosophers);
 
 void			ft_lstclear_fork(t_fork **fork);
 

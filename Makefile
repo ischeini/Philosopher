@@ -3,7 +3,7 @@ NAME = philosopher
 SRCDIR = ./
 OBJDIR = obj/
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g
 
 SRC	=	${SRCDIR}philosopher.c			\
 		${SRCDIR}philosopher_init.c		\
@@ -17,7 +17,7 @@ OBJ = ${SRC:${SRCDIR}%.c=${OBJDIR}%.o}
 all:${NAME}
 
 ${NAME}: ${OBJ}
-	@gcc ${FLAGS} -o ${NAME} ${OBJ}
+	@cc ${FLAGS} -o ${NAME} ${OBJ}
 
 ${OBJDIR}:
 	@mkdir -p $@
