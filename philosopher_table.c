@@ -6,7 +6,7 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:19:39 by ischeini          #+#    #+#             */
-/*   Updated: 2025/05/27 18:05:39 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/06/01 16:56:50 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ static t_fork	*ft_forknew()
 
 static void	ft_lstadd_fork(t_fork **forks, t_fork *new)
 {
+	if (!forks[0])
+	{
+		forks[0] = new;
+		return ;
+	}
 	new->next = forks[0];
 	forks[0] = new;
 }
@@ -46,7 +51,7 @@ static t_fork	**ft_put_forks(int philosophers)
 		next_forks = ft_forknew();
 		if (!next_forks)
 		{
-			ft_lstclear_fork(forks);
+			ft_lstclear_fork(forks, philosophers);
 			return (NULL);
 		}
 		ft_lstadd_fork(forks, next_forks);

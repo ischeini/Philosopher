@@ -12,23 +12,54 @@
 
 #include "philosopher.h"
 
-int	ft_philo_alive(t_philo *philo)
+void	ft_sleep(t_philo *phi, __useconds_t milisec)
 {
-	t_philo	*tmp;
-	int		i;
+	struct timeval	tv;
+	
+	gettimeofday(&tv, NULL);
+	printf("%d, the philo %d is sleeping\n", tv, phi->soul->nbr);
+	usleep(milisec);
+}
 
-	tmp = philo;
-	i = tmp->soul->philosophers;
-	if (!tmp->soul->dead)
-		return (0);
-	else
-		tmp = tmp->next;
-	while (i != tmp->soul->philosophers)
+void	ft_can_grab_forks(t_philo *phi, __useconds_t milisec)
+{
+	struct timeval	tv;
+	
+	pthread_mutex_lock(phi->right_fork->mutex->loked);
+	gettimeofday(&tv, NULL);
+	printf("%d, the philo %d has taken a fork\n", tv, phi->soul->nbr);
+	pthread_mutex_lock(phi->left_fork->mutex->loked);
+	gettimeofday(&tv, NULL);
+	printf("%d, the philo %d has taken a fork\n", tv, phi->soul->nbr);
+	if (ft_philo_alive(phi))
 	{
-		if (!tmp->soul->dead)
-			return (0);
-		else
-			tmp = tmp->next;
+		gettimeofday(&tv, NULL);
+		printf("%d, the philo %d is eating\n", tv, phi->soul->nbr);
+		usleep(milisec);
+		phi->times_to_eat++;
+	}
+	pthread_mutex_unlock(phi->right_fork->mutex->loked);
+	pthread_mutex_unlock(phi->left_fork->mutex->loked);
+}
+
+void	ft_think(t_philo *phi)
+{
+	struct timeval	tv;
+	
+	gettimeofday(&tv, NULL);
+	printf("%d, the philo %d is thinking\n", tv, phi->soul->nbr);
+}
+
+int	ft_philo_alive(t_philo *phi)
+{
+	struct timeval	tv;
+
+	phi->soul->last_meal = gettimeofday(&tv, NULL);
+	if (phi->soul->last_meal >= phi->die)
+	{
+		printf("%d, the philosopher %d died\n", tv, phi->soul->nbr);
+		phi->soul->die = 0;
+		return (0);
 	}
 	return (1);
 }

@@ -22,7 +22,7 @@
 
 typedef	struct s_fork
 {
-	pthread_mutex_t	*mutex;
+	pthread_mutex_t	mutex;
 	struct s_fork	*next;
 	int				table;
 }	t_fork;
@@ -34,6 +34,7 @@ typedef struct s_soul
 	int				has_forks;
 	int				meals_eaten;
 	int				dead;
+	int				nbr;
 }	t_soul;
 
 typedef struct s_philo
@@ -61,18 +62,28 @@ typedef struct s_table
 	int				times_to_eat;
 }t_table;
 
-t_philo			**ft_start_philosophers(t_table *table);
+void	ft_can_grab_forks(t_philo *phi, __useconds_t milisec);
 
-t_table			*ft_init_table(int argc, char **args);
+void	ft_sleep(t_philo *phi, __useconds_t milisec);
 
-void			ft_lstclear_soul(t_philo **philo, int philosophers);
+void	ft_think(t_philo *phi);
 
-void			ft_lstclear_fork(t_fork **fork);
+int		ft_philo_alive(t_philo *phi);
 
-int				ft_check_args(char **args);
+t_philo	**ft_start_philosophers(t_table *table);
 
-int				ft_atoi(const char *str);
+t_table	*ft_init_table(int argc, char **args);
 
-int				ft_error(char *str);
+void	ft_lstclear_soul(t_philo **philo, int philosophers);
+
+void	ft_lstclear_fork(t_fork **fork, int philosophers);
+
+void	ft_start_simulation(t_philo **philo, t_table *table);
+
+int		ft_check_args(char **args);
+
+int		ft_atoi(const char *str);
+
+int		ft_error(char *str);
 
 #endif

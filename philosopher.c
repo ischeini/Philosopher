@@ -32,9 +32,8 @@ int	main(int argc, char **args)
 		free(table);
 		return (1);
 	}
-	//if (!ft_start_simulation(philos, table))
-	//	i = 1;
-	ft_lstclear_fork(table->forks);
+	ft_start_simulation(philos, table);
+	ft_lstclear_fork(table->forks, table->philosophers);
 	ft_lstclear_soul(philos, table->philosophers);
 	free(table);
 	return (i);

@@ -6,18 +6,22 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:34:21 by ischeini          #+#    #+#             */
-/*   Updated: 2025/05/27 14:43:16 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/06/01 17:16:48 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 
-void	ft_lstclear_fork(t_fork **fork)
+void	ft_lstclear_fork(t_fork **fork, int philosophers)
 {
 	t_fork	*tmp;
+	int		i;
 
-	while (*fork)
+	i = 0;
+	while (fork[0] && i++ < philosophers)
 	{
+		if (&fork[0]->mutex)
+			pthread_mutex_destroy(&fork[0]->mutex);
 		tmp = fork[0]->next;
 		free(fork[0]);
 		fork[0] = tmp;
@@ -32,7 +36,7 @@ void	ft_lstclear_soul(t_philo **philo, int philosophers)
 	int		i;
 
 	i = 0;
-	while (*philo && i++ < philosophers)
+	while (philo[0] && i++ < philosophers)
 	{
 		tmp = philo[0]->next;
 		free(philo[0]->soul);
