@@ -6,7 +6,7 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:59:51 by ischeini          #+#    #+#             */
-/*   Updated: 2025/06/06 12:45:51 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/06/07 17:47:41 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,6 @@ static t_philo	*ft_newphilo(t_fork **fork, t_table *table, int i)
 	if (!philo)
 		return (NULL);
 	philo->left_fork = tmp_fork;
-	if (i == table->philosophers && i != 1)
-	{
-		tmp_fork->next = fork[0];
-		philo->right_fork = tmp_fork->next;
-	}
 	philo->soul = malloc(sizeof(t_soul));
 	if (!philo->soul)
 	{
@@ -43,7 +38,7 @@ static t_philo	*ft_newphilo(t_fork **fork, t_table *table, int i)
 	return (philo);
 }
 
-static void	ft_lstadd_philo(t_table *table, t_philo **phil, t_philo *new, int i)
+static void	ft_lstad_philo(t_table *table, t_philo **phil, t_philo *new, int i)
 {
 	new->times_to_eat = table->times_to_eat;
 	new->sleep = table->sleep;
@@ -76,7 +71,11 @@ static void	ft_sit_philo(t_philo **philo, int philosophers)
 	first = *philo;
 	last = first;
 	while (last && last->next)
+	{
+		last->right_fork = last->next->left_fork;
 		last = last->next;
+	}
+	last->right_fork = first->left_fork;
 	if (last && first && philosophers != 1)
 	{
 		last->next = first;
@@ -114,8 +113,8 @@ t_philo	**ft_start_philosophers(t_table *table)
 			ft_lstclear_soul(philos, i);
 			return (NULL);
 		}
-		ft_lstadd_philo(table, philos, next_philo, i);
 		pthread_mutex_init(&next_philo->left_fork->mutex, NULL);
+		ft_lstad_philo(table, philos, next_philo, i);
 	}
 	ft_sit_philo(philos, table->philosophers);
 	return (philos);

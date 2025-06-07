@@ -20,6 +20,19 @@
 # include <unistd.h>
 # include <stdio.h>
 
+typedef struct s_time
+{
+	struct timeval	last_thing;
+	struct timeval	last_meal;
+	struct timeval	current;
+	struct timeval	initial;
+	struct timeval	nothing;
+	struct timeval	sleep;
+	struct timeval	dead;
+	struct timeval	eat;
+}	t_time;
+
+
 typedef	struct s_fork
 {
 	pthread_mutex_t	mutex;
@@ -29,7 +42,7 @@ typedef	struct s_fork
 
 typedef struct s_soul
 {
-	pthread_t		philosophers;
+	pthread_t		*philosophers;
 	int				last_meal;
 	int				has_forks;
 	int				meals_eaten;
@@ -62,13 +75,13 @@ typedef struct s_table
 	int				times_to_eat;
 }t_table;
 
-void	ft_can_grab_forks(t_philo *phi, __useconds_t milisec);
+void	ft_can_grab_forks(t_philo *phi, t_time *time);
 
-void	ft_sleep(t_philo *phi, __useconds_t milisec);
+void	ft_sleep(t_philo *phi, t_time *time);
 
-void	ft_think(t_philo *phi);
+void	ft_think(t_philo *phi, t_time *time);
 
-int		ft_philo_alive(t_philo *phi);
+int		ft_philo_alive(t_philo *phi, t_time *time);
 
 t_philo	**ft_start_philosophers(t_table *table);
 

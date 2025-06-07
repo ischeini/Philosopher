@@ -12,51 +12,53 @@
 
 #include "philosopher.h"
 
-static int	ft_infinite(t_philo *soul)
+static int	ft_infinite(t_philo *soul, t_time *time)
 {
-	__useconds_t	milisec;
-
-	while (ft_philo_alive(soul))
+	while (ft_philo_alive(soul, time))
 	{
-		ft_think(soul);
-		milisec = soul->eat * 1000;
-		ft_can_grab_forks(soul, milisec);
-		if (soul->soul->dead == 0)
-			return (1);
-		milisec = soul->sleep * 1000;
-		usleep(milisec);
+		ft_can_grab_forks(soul, time);
+		ft_sleep(soul, time);
+		ft_think(soul, time);
 	}
+	free(time);
 	return (1);
 }
 
-static int	ft_eat_until_finish(t_philo *soul)
+static int	ft_eat_until_finish(t_philo *soul, t_time *time)
 {
-	__useconds_t	milisec;
-	int	i;
+	int	j;
 
-	i = 0;
-	while (i < soul->times_to_eat && ft_philo_alive(soul))
+	j = 0;
+	while (j < soul->times_to_eat && ft_philo_alive(soul, time))
 	{
-		ft_think(soul);
-		milisec = soul->eat * 1000;
-		ft_can_grab_forks(soul, milisec);
-		if (soul->soul->dead == 0)
-			return (1);
-		milisec = soul->sleep * 1000;
-		usleep(milisec);
+		ft_can_grab_forks(soul, time);
+		j++;
+		ft_sleep(soul, time);
+		ft_think(soul, time);
 	}
 	return (1);
 }
 
 static void	*ft_start(void *soul)
 {
-	t_philo			*tmp;
+	t_philo	*tmp;
+	t_time	*time;
 
 	tmp = (t_philo *)soul;
+	time = malloc((sizeof(t_time)));
+	if (!time)
+		return (0);
+	gettimeofday(&time->initial, NULL);
+	ft_think(soul, time);
 	if (tmp->times_to_eat)
-		ft_eat_until_finish(tmp);
+	{
+		if (!ft_eat_until_finish(tmp, time))
+			return (NULL);
+	}
 	else
-		ft_infinite(tmp);
+		if (!ft_infinite(tmp, time))
+			return (NULL);
+	return (soul);
 }
 
 void	ft_start_simulation(t_philo **philo, t_table *table)
@@ -65,17 +67,21 @@ void	ft_start_simulation(t_philo **philo, t_table *table)
 	int		i;	
 
 	tmp = philo[0];
+	tmp->soul->philosophers = malloc(sizeof(pthread_t) * table->philosophers);
+	if (!tmp->soul->philosophers)
+		return ;
 	i = 0;
-	while (i++ < table->philosophers)
+	while (i < table->philosophers)
 	{
-		pthread_create(tmp->soul->philosophers, NULL, &ft_start, (void *)tmp);
+		if (pthread_create(&philo[0]->soul->philosophers[i++], NULL, &ft_start, (void *)tmp))
+		{
+			free(tmp->soul->philosophers);
+			return ;
+		}
 		tmp = tmp->next;
 	}
-	tmp = philo[0];
-	while (tmp)
-	{
-		if (!tmp->soul->dead)
-			break ;
-		tmp = tmp->next;
-	}
+	i = 0;
+	while (i < table->philosophers)
+		pthread_join(tmp->soul->philosophers[i++], NULL);
+	free(tmp->soul->philosophers);
 }
