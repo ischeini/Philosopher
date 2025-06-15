@@ -75,7 +75,7 @@ typedef struct s_table
 	int				times_to_eat;
 }t_table;
 
-void	ft_can_grab_forks(t_philo *phi, t_time *time);
+int	ft_can_grab_forks(t_philo *phi, t_time *time);
 
 void	ft_sleep(t_philo *phi, t_time *time);
 

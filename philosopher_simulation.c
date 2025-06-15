@@ -14,9 +14,12 @@
 
 static int	ft_infinite(t_philo *soul, t_time *time)
 {
+	gettimeofday(&time->initial, NULL);
+	ft_think(soul, time);
 	while (ft_philo_alive(soul, time))
 	{
-		ft_can_grab_forks(soul, time);
+		if (!ft_can_grab_forks(soul, time))
+			break ;
 		ft_sleep(soul, time);
 		ft_think(soul, time);
 	}
@@ -29,9 +32,14 @@ static int	ft_eat_until_finish(t_philo *soul, t_time *time)
 	int	j;
 
 	j = 0;
+	gettimeofday(&time->initial, NULL);
+	gettimeofday(&time->last_meal, NULL);
+	time->last_meal.tv_usec = time->initial.tv_usec;
+	ft_think(soul, time);
 	while (j < soul->times_to_eat && ft_philo_alive(soul, time))
 	{
-		ft_can_grab_forks(soul, time);
+		if (!ft_can_grab_forks(soul, time))
+			break ;
 		j++;
 		ft_sleep(soul, time);
 		ft_think(soul, time);
@@ -48,8 +56,7 @@ static void	*ft_start(void *soul)
 	time = malloc((sizeof(t_time)));
 	if (!time)
 		return (0);
-	gettimeofday(&time->initial, NULL);
-	ft_think(soul, time);
+
 	if (tmp->times_to_eat)
 	{
 		if (!ft_eat_until_finish(tmp, time))
@@ -73,6 +80,7 @@ void	ft_start_simulation(t_philo **philo, t_table *table)
 	i = 0;
 	while (i < table->philosophers)
 	{
+		printf("Hola\n");
 		if (pthread_create(&philo[0]->soul->philosophers[i++], NULL, &ft_start, (void *)tmp))
 		{
 			free(tmp->soul->philosophers);
