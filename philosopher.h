@@ -54,19 +54,21 @@ typedef struct s_philo
 {
 	struct s_philo	*back;
 	struct s_philo	*next;
-	t_soul			*soul;
-	t_fork			*left_fork;
+	pthread_mutex_t	mutex;
 	t_fork			*right_fork;
-	int				die;
-	int				sleep;
+	t_fork			*left_fork;
+	t_soul			*soul;
 	int				times_to_eat;
 	int				you_eat;
+	int				sleep;
+	int				die;
 	int				eat;
 }	t_philo;
 
 typedef struct s_table
 {
 	t_philo			*head;
+	t_philo			**philo;
 	t_fork			**forks;
 	int				sleep;
 	int				eat;
@@ -75,9 +77,11 @@ typedef struct s_table
 	int				times_to_eat;
 }t_table;
 
+long	ft_calculate(struct timeval *current);
+
 int	ft_can_grab_forks(t_philo *phi, t_time *time);
 
-void	ft_sleep(t_philo *phi, t_time *time);
+int	ft_sleep(t_philo *phi, t_time *time);
 
 void	ft_think(t_philo *phi, t_time *time);
 

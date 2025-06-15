@@ -12,60 +12,78 @@
 
 #include "philosopher.h"
 
-void	ft_sleep(t_philo *phi, t_time *time)
+long	ft_calculate(struct timeval *current)
 {
+	long	difference;
+
+	difference = current->tv_sec * 1000;
+	difference += current->tv_usec / 1000;
+	return (difference);
+}
+
+int	ft_sleep(t_philo *phi, t_time *time)
+{
+	long	misec;
+
 	gettimeofday(&time->current, NULL);
-	time->last_thing.tv_usec = time->initial.tv_usec - time->current.tv_usec;
-	printf("%ld %d died\n", time->last_thing.tv_usec, phi->soul->nbr);
-	usleep((phi->sleep * 1000));
-	gettimeofday(&time->current, NULL);
-	time->initial.tv_usec = time->current.tv_usec - time->current.tv_usec;
+	misec = ft_calculate(&time->current) - ft_calculate(&time->initial);
+	printf("%.010ld %d is sleeping\n", misec, phi->soul->nbr);
+	usleep(phi->sleep * 1000);
+	return (1);
 }
 
 int	ft_can_grab_forks(t_philo *phi, t_time *time)
 {
+	long	misec;
+
 	if (!pthread_mutex_lock(&phi->left_fork->mutex) &&
 	!pthread_mutex_lock(&phi->right_fork->mutex))
 	{
 		if (ft_philo_alive(phi, time))
 		{
-			gettimeofday(&time->current, NULL);
-			time->last_thing.tv_usec = time->current.tv_usec - time->initial.tv_usec;
-			printf("%.06ld %d has taken a fork\n", time->last_thing.tv_usec, phi->soul->nbr);
-			gettimeofday(&time->current, NULL);
-			time->last_thing.tv_usec = time->current.tv_usec - time->initial.tv_usec;
-			printf("%.06ld %d has taken a fork\n", time->last_thing.tv_usec, phi->soul->nbr);
-			gettimeofday(&time->current, NULL);
-			time->last_thing.tv_usec = time->current.tv_usec - time->initial.tv_usec;
-			printf("%.06ld %d is eating\n", time->last_thing.tv_usec, phi->soul->nbr);
+			misec = ft_calculate(&time->current) - ft_calculate(&time->initial);
+			printf("%.010ld %d has taken a fork\n", misec, phi->soul->nbr);
+			misec = ft_calculate(&time->current) - ft_calculate(&time->initial);
+			printf("%.010ld %d has taken a fork\n", misec, phi->soul->nbr);
+			misec = ft_calculate(&time->current) - ft_calculate(&time->initial);
+			printf("%.010ld %d is eating\n", misec, phi->soul->nbr);
 			usleep(phi->eat * 1000);
+			pthread_mutex_unlock(&phi->right_fork->mutex);
+			pthread_mutex_unlock(&phi->left_fork->mutex);
 		}
 		else
+		{
+			pthread_mutex_unlock(&phi->right_fork->mutex);
+			pthread_mutex_unlock(&phi->left_fork->mutex);
 			return (0);
-		pthread_mutex_unlock(&phi->right_fork->mutex);
-		pthread_mutex_unlock(&phi->left_fork->mutex);
+		}
 		gettimeofday(&time->last_meal, NULL);
+		gettimeofday(&time->current, NULL);
+		misec = ft_calculate(&time->current) - ft_calculate(&time->initial);
+		printf("%.010ld %d is sleeping\n", misec, phi->soul->nbr);
+		usleep(phi->sleep * 1000);
 	}
 	return (1);
 }
 
 void	ft_think(t_philo *phi, t_time *time)
 {
+	long	misec;
+
 	gettimeofday(&time->current, NULL);
-	time->last_thing.tv_usec = time->current.tv_usec - time->initial.tv_usec;
-	printf("%ld, %d is thinking\n", time->last_thing.tv_usec, phi->soul->nbr);
+	misec = ft_calculate(&time->current) - ft_calculate(&time->initial);
+	printf("%.10ld %d is thinking\n", misec, phi->soul->nbr);
 }
 
 int	ft_philo_alive(t_philo *phi, t_time *time)
 {
-	gettimeofday(&time->current, NULL);
-	time->last_thing.tv_usec = time->current.tv_usec - time->last_meal.tv_usec;
-	if (time->last_thing.tv_usec >= (phi->die * 1000))
-	{
-		time->last_thing.tv_usec = time->current.tv_usec - time->initial.tv_usec;
-		printf("%ld %d died\n", time->last_thing.tv_usec, phi->soul->nbr);
-		phi->soul->dead = 0;
+	long	misec;
+
+	if (!phi->next->soul->dead || !phi->back->soul->dead)
 		return (0);
-	}
+	gettimeofday(&time->current, NULL);
+	misec = ft_calculate(&time->current) - ft_calculate(&time->last_meal);
+	if (misec >= (phi->die))
+		return (0);
 	return (1);
 }

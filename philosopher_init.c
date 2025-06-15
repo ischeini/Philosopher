@@ -6,7 +6,7 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:59:51 by ischeini          #+#    #+#             */
-/*   Updated: 2025/06/07 17:47:41 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/06/15 22:05:47 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,12 @@ static void	ft_lstad_philo(t_table *table, t_philo **phil, t_philo *new, int i)
 	if (!phil[0])
 	{
 		phil[0] = new;
+		new->mutex = table->philo[0]->mutex;
+		if (i == 1)
+			pthread_mutex_init(&new->mutex, NULL);
 		return ;
 	}
+	new->mutex = table->philo[0]->mutex;
 	new->next = phil[0];
 	phil[0]->back = new;
 	phil[0] = new;
@@ -115,6 +119,7 @@ t_philo	**ft_start_philosophers(t_table *table)
 		}
 		pthread_mutex_init(&next_philo->left_fork->mutex, NULL);
 		ft_lstad_philo(table, philos, next_philo, i);
+
 	}
 	ft_sit_philo(philos, table->philosophers);
 	return (philos);
