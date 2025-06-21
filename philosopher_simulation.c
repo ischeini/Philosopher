@@ -14,23 +14,13 @@
 
 static int	ft_infinite(t_philo *soul, t_time *time)
 {
-	long	misec;
-
 	gettimeofday(&time->initial, NULL);
 	ft_think(soul, time);
 	time->last_meal.tv_sec = time->initial.tv_sec;
 	time->last_meal.tv_usec = time->initial.tv_usec;
 	while (ft_philo_alive(soul, time))
 	{
-		if (!ft_can_grab_forks(soul, time))
-		{
-			misec = ft_calculate(&time->current) - ft_calculate(&time->initial);
-			printf("%.10ld %d died\n", misec, soul->soul->nbr);
-			soul->soul->dead = 0;
-			free(time);
-			return (1);
-		}
-		ft_sleep(soul, time);
+		ft_can_grab_forks(soul, time);
 		ft_think(soul, time);
 	}
 	free(time);
@@ -39,7 +29,6 @@ static int	ft_infinite(t_philo *soul, t_time *time)
 
 static int	ft_eat_until_finish(t_philo *soul, t_time *time)
 {
-	long	misec;
 	int		j;
 
 	j = 0;
@@ -49,14 +38,7 @@ static int	ft_eat_until_finish(t_philo *soul, t_time *time)
 	ft_think(soul, time);
 	while (j < soul->times_to_eat && ft_philo_alive(soul, time))
 	{
-		if (!ft_can_grab_forks(soul, time))
-		{
-			misec = ft_calculate(&time->current) - ft_calculate(&time->initial);
-			printf("%.10ld %d died\n", misec, soul->soul->nbr);
-			soul->soul->dead = 0;
-			free(time);
-			return (1);
-		}
+		ft_can_grab_forks(soul, time);
 		j++;
 		ft_think(soul, time);
 	}
@@ -96,6 +78,7 @@ void	ft_start_simulation(t_philo **philo, t_table *table)
 		return ;
 	i = 0;
 	table->philo = philo;
+	i = 0;
 	pthread_mutex_lock(&table->philo[0]->mutex);
 	while (i < table->philosophers)
 	{

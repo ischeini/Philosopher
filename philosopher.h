@@ -26,10 +26,7 @@ typedef struct s_time
 	struct timeval	last_meal;
 	struct timeval	current;
 	struct timeval	initial;
-	struct timeval	nothing;
-	struct timeval	sleep;
-	struct timeval	dead;
-	struct timeval	eat;
+	long			dead;
 }	t_time;
 
 
@@ -58,6 +55,7 @@ typedef struct s_philo
 	t_fork			*right_fork;
 	t_fork			*left_fork;
 	t_soul			*soul;
+	t_time			*time;
 	int				times_to_eat;
 	int				you_eat;
 	int				sleep;

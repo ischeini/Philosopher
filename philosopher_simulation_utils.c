@@ -50,6 +50,8 @@ int	ft_can_grab_forks(t_philo *phi, t_time *time)
 			usleep(phi->eat * 1000);
 			pthread_mutex_unlock(&phi->right_fork->mutex);
 			pthread_mutex_unlock(&phi->left_fork->mutex);
+			gettimeofday(&time->last_meal, NULL);
+			ft_sleep(phi, time);
 		}
 		else
 		{
@@ -57,11 +59,6 @@ int	ft_can_grab_forks(t_philo *phi, t_time *time)
 			pthread_mutex_unlock(&phi->left_fork->mutex);
 			return (0);
 		}
-		gettimeofday(&time->last_meal, NULL);
-		gettimeofday(&time->current, NULL);
-		misec = ft_calculate(&time->current) - ft_calculate(&time->initial);
-		printf("%.010ld %d is sleeping\n", misec, phi->soul->nbr);
-		usleep(phi->sleep * 1000);
 	}
 	return (1);
 }
@@ -84,6 +81,10 @@ int	ft_philo_alive(t_philo *phi, t_time *time)
 	gettimeofday(&time->current, NULL);
 	misec = ft_calculate(&time->current) - ft_calculate(&time->last_meal);
 	if (misec >= (phi->die))
+	{
+		phi->soul->dead = 0;
+		time->dead = misec;
 		return (0);
+	}
 	return (1);
 }
