@@ -72,6 +72,7 @@ static int	ft_check_table(t_table *table, int argc)
 		if (table->max_meals == -1)
 			return (ft_error("Philosopher: No need to eat"));
 	}
+	table->simulation_running = 1;
 	return (1);
 }
 
@@ -89,7 +90,6 @@ t_table	*ft_init_table(t_table *table, int argc, char **args)
 		table->max_meals = -1;
 	pthread_mutex_init(&table->print_mutex, NULL);
 	pthread_mutex_init(&table->start_mutex, NULL);
-	gettimeofday(&table->start_time, NULL);
 	table->forks = ft_put_forks(table);
 	if (!table->forks)
 		return (NULL);

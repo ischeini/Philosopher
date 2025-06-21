@@ -26,11 +26,10 @@ int	main(int argc, char **args)
 	i = 0;
 	while (i < table.num_philos)
 	{
-		pthread_create(&table.philos[i].thread, NULL, ft_philo_routine, &table);
+		pthread_create(&table.philos[i].thread, NULL, ft_philo_routine, &table.philos[i]);
 		i++;
 	}
 	pthread_create(&monitor, NULL, ft_monitor_routine, &table);
-	usleep(1000);
 	pthread_mutex_unlock(&table.start_mutex);
 	i = 0;
 	while (i < table.num_philos)

@@ -18,29 +18,39 @@ void	*ft_philo_routine(void *arg)
 	t_table	*table;
 
 	philo = (t_philo *)arg;
-	table = philo->table;
-	if (!philo || !philo->table)
+	table = (t_table *)philo->table;
+	if (!philo->table)
+	{
+		printf("philo->table no existe\n");
 		return (NULL);
+	}
 	pthread_mutex_lock(&table->start_mutex);
 	pthread_mutex_unlock(&table->start_mutex);
+	gettimeofday(&table->start_time, NULL);
 	philo->last_meal_time = ft_get_current_time(table);
 	while (table->simulation_running)
 	{
 		ft_print_status(philo, "is thinking");
-		pthread_mutex_lock(&philo->left_fork->mutex);
-		ft_print_status(philo, "has taken a fork");
-		pthread_mutex_lock(&philo->right_fork->mutex);
-		ft_print_status(philo, "has taken a fork");
+		if (table->simulation_running && pthread_mutex_lock(&philo->left_fork->mutex))
+			ft_print_status(philo, "has taken a fork");
+		if (table->simulation_running && pthread_mutex_lock(&philo->right_fork->mutex))
+			ft_print_status(philo, "has taken a fork");
+		if (table->simulation_running)
+		{
+			ft_print_status(philo, "is eating");
+			usleep(table->time_to_eat * 1000);
+		}
 		philo->last_meal_time = ft_get_current_time(table);
-		ft_print_status(philo, "is eating");
-		usleep(table->time_to_eat * 1000);
 		pthread_mutex_unlock(&philo->left_fork->mutex);
 		pthread_mutex_unlock(&philo->right_fork->mutex);
 		philo->meals_eaten++;
 		if (table->max_meals != -1 && philo->meals_eaten >= table->max_meals)
 			break ;
-		ft_print_status(philo, "is sleeping");
-		usleep(table->time_to_sleep * 1000);
+		if (table->simulation_running)
+		{
+			ft_print_status(philo, "is sleeping");
+			usleep(table->time_to_sleep * 1000);
+		}
 	}
 	return (NULL);
 }
@@ -54,7 +64,7 @@ void	*ft_monitor_routine(void *arg)
 	table = (t_table *)arg;
 	while (table->simulation_running)
 	{
-		usleep(1000);
+		usleep(100);
 		i = 0;
 		while (i < table->num_philos)
 		{
