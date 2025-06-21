@@ -12,7 +12,7 @@
 
 #include "philosopher.h"
 
-static t_philo	*ft_newphilo(t_fork **fork, t_table *table, int i)
+/*static t_philo	*ft_newphilo(t_fork **fork, t_table *table, int i)
 {
 	t_philo	*philo;
 	t_fork	*tmp_fork;
@@ -49,6 +49,7 @@ static void	ft_lstad_philo(t_table *table, t_philo **phil, t_philo *new, int i)
 	new->you_eat = 0;
 	new->next = NULL;
 	new->back = NULL;
+	ft_time_unused(new);
 	if (!phil[0])
 	{
 		phil[0] = new;
@@ -74,7 +75,6 @@ static void	ft_sit_philo(t_philo **philo, int philosophers)
 	{
 		last->right_fork = last->next->left_fork;
 		last = last->next;
-		last->mutex = philo[0]->mutex;
 	}
 	last->right_fork = first->left_fork;
 	if (last && first && philosophers != 1)
@@ -120,4 +120,4 @@ t_philo	**ft_start_philosophers(t_table *table)
 	}
 	ft_sit_philo(philos, table->philosophers);
 	return (philos);
-}
+}*/

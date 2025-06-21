@@ -12,7 +12,27 @@
 
 #include "philosopher.h"
 
-void	ft_lstclear_fork(t_fork **fork, int philosophers)
+int	ft_error(char *str)
+{
+	printf("%s\n", str);
+	return (-1);
+}
+
+void	ft_destroy_mutex(t_table *table)
+{
+	int	i;
+
+	pthread_mutex_destroy(&table->print_mutex);
+	pthread_mutex_destroy(&table->start_mutex);
+	i = 0;
+	while (i < table->num_philos)
+	{
+		pthread_mutex_destroy(&table->forks[i].mutex);
+		i++;
+	}
+}
+
+/*void	ft_lstclear_fork(t_fork **fork, int philosophers)
 {
 	t_fork	*tmp;
 	int		i;
@@ -28,9 +48,9 @@ void	ft_lstclear_fork(t_fork **fork, int philosophers)
 	}
 	fork[0] = NULL;
 	free(fork);
-}
+}*/
 
-void	ft_lstclear_soul(t_philo **philo, int philosophers)
+/*void	ft_lstclear_soul(t_philo **philo, int philosophers)
 {
 	t_philo	*tmp;
 	int		i;
@@ -45,10 +65,4 @@ void	ft_lstclear_soul(t_philo **philo, int philosophers)
 	}
 	philo[0] = NULL;
 	free(philo);
-}
-
-int	ft_error(char *str)
-{
-	printf("%s\n", str);
-	return (0);
-}
+}*/

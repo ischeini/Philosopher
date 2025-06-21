@@ -20,7 +20,55 @@
 # include <unistd.h>
 # include <stdio.h>
 
-typedef struct s_time
+typedef struct s_fork
+{
+    pthread_mutex_t mutex;
+    int id;
+} t_fork;
+
+typedef struct s_philo
+{
+    struct s_table *table;
+    long last_meal_time;
+    t_fork *right_fork;
+    t_fork *left_fork;
+    pthread_t thread;
+    int meals_eaten;
+    int id;
+} t_philo;
+
+typedef struct s_table
+{
+    pthread_mutex_t print_mutex;
+    pthread_mutex_t start_mutex;
+    struct timeval start_time;
+    int simulation_running;
+    long time_to_sleep;
+    long time_to_die;
+    long time_to_eat;
+    t_philo *philos;
+    int num_philos;
+    int max_meals;
+    t_fork *forks;
+} t_table;
+
+int	ft_error(char *str);
+
+int	ft_atoi(const char *str);
+
+void	ft_destroy_mutex(t_table *table);
+
+t_table	*ft_init_table(t_table *table, int argc, char **args);
+
+void	*ft_monitor_routine(void *arg);
+
+void	*ft_philo_routine(void *arg);
+
+long	ft_get_current_time(t_table *table);
+
+void	ft_print_status(t_philo *philos, const char *status);
+
+/*typedef struct s_time
 {
 	struct timeval	last_thing;
 	struct timeval	last_meal;
@@ -51,11 +99,11 @@ typedef struct s_philo
 {
 	struct s_philo	*back;
 	struct s_philo	*next;
-	pthread_mutex_t	mutex;
 	t_fork			*right_fork;
 	t_fork			*left_fork;
 	t_soul			*soul;
 	t_time			*time;
+	long			unused;
 	int				times_to_eat;
 	int				you_eat;
 	int				sleep;
@@ -74,6 +122,8 @@ typedef struct s_table
 	int				philosophers;
 	int				times_to_eat;
 }t_table;
+
+void	ft_time_unused(t_philo *philo);
 
 long	ft_calculate(struct timeval *current);
 
@@ -99,6 +149,6 @@ int		ft_check_args(char **args);
 
 int		ft_atoi(const char *str);
 
-int		ft_error(char *str);
+int		ft_error(char *str);*/
 
 #endif

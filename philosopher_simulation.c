@@ -12,15 +12,77 @@
 
 #include "philosopher.h"
 
-static int	ft_infinite(t_philo *soul, t_time *time)
+void	*ft_philo_routine(void *arg)
+{
+	t_philo	*philo;
+	t_table	*table;
+
+	philo = (t_philo *)arg;
+	table = philo->table;
+	if (!philo || !philo->table)
+		return (NULL);
+	pthread_mutex_lock(&table->start_mutex);
+	pthread_mutex_unlock(&table->start_mutex);
+	philo->last_meal_time = ft_get_current_time(table);
+	while (table->simulation_running)
+	{
+		ft_print_status(philo, "is thinking");
+		pthread_mutex_lock(&philo->left_fork->mutex);
+		ft_print_status(philo, "has taken a fork");
+		pthread_mutex_lock(&philo->right_fork->mutex);
+		ft_print_status(philo, "has taken a fork");
+		philo->last_meal_time = ft_get_current_time(table);
+		ft_print_status(philo, "is eating");
+		usleep(table->time_to_eat * 1000);
+		pthread_mutex_unlock(&philo->left_fork->mutex);
+		pthread_mutex_unlock(&philo->right_fork->mutex);
+		philo->meals_eaten++;
+		if (table->max_meals != -1 && philo->meals_eaten >= table->max_meals)
+			break ;
+		ft_print_status(philo, "is sleeping");
+		usleep(table->time_to_sleep * 1000);
+	}
+	return (NULL);
+}
+
+void	*ft_monitor_routine(void *arg)
+{
+	long	lm;
+	t_table	*table;
+	int		i;
+
+	table = (t_table *)arg;
+	while (table->simulation_running)
+	{
+		usleep(1000);
+		i = 0;
+		while (i < table->num_philos)
+		{
+			lm = ft_get_current_time(table) - table->philos[i].last_meal_time;
+			if (lm > table->time_to_die)
+			{
+				pthread_mutex_lock(&table->print_mutex);
+				printf("%.06ld %d died\n", ft_get_current_time(table),
+				table->philos[i].id);
+				table->simulation_running = 0;
+				pthread_mutex_unlock(&table->print_mutex);
+				return (NULL);
+			}
+		}
+	}
+	return (NULL);
+}
+
+/*static int	ft_infinite(t_philo *soul, t_time *time)
 {
 	gettimeofday(&time->initial, NULL);
-	ft_think(soul, time);
 	time->last_meal.tv_sec = time->initial.tv_sec;
 	time->last_meal.tv_usec = time->initial.tv_usec;
+	ft_think(soul, time);
 	while (ft_philo_alive(soul, time))
 	{
-		ft_can_grab_forks(soul, time);
+		if (!ft_can_grab_forks(soul, time))
+			break ;
 		ft_think(soul, time);
 	}
 	free(time);
@@ -38,7 +100,8 @@ static int	ft_eat_until_finish(t_philo *soul, t_time *time)
 	ft_think(soul, time);
 	while (j < soul->times_to_eat && ft_philo_alive(soul, time))
 	{
-		ft_can_grab_forks(soul, time);
+		if (!ft_can_grab_forks(soul, time))
+			break ;
 		j++;
 		ft_think(soul, time);
 	}
@@ -55,7 +118,6 @@ static void	*ft_start(void *soul)
 	time = malloc((sizeof(t_time)));
 	if (!time)
 		return (0);
-	pthread_mutex_lock(&tmp->mutex);
 	if (tmp->times_to_eat)
 	{
 		if (!ft_eat_until_finish(tmp, time))
@@ -79,7 +141,6 @@ void	ft_start_simulation(t_philo **philo, t_table *table)
 	i = 0;
 	table->philo = philo;
 	i = 0;
-	pthread_mutex_lock(&table->philo[0]->mutex);
 	while (i < table->philosophers)
 	{
 		if (pthread_create(&philo[0]->soul->philosophers[i++], NULL, &ft_start, (void *)tmp))
@@ -89,9 +150,8 @@ void	ft_start_simulation(t_philo **philo, t_table *table)
 		}
 		tmp = tmp->next;
 	}
-	pthread_mutex_unlock(&table->philo[0]->mutex);
 	i = 0;
 	while (i < table->philosophers)
 		pthread_join(tmp->soul->philosophers[i++], NULL);
 	free(tmp->soul->philosophers);
-}
+}*/
