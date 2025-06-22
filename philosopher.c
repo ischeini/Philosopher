@@ -18,7 +18,7 @@ int	main(int argc, char **args)
 	t_table		table;
 	int			i;
 
-	if (argc <= 4 || argc >= 7)
+	if (argc < 5 || argc > 6)
 		return (ft_error("Argv: Amount"));
 	if (!ft_init_table(&table, argc, args))
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:19:39 by ischeini          #+#    #+#             */
-/*   Updated: 2025/06/22 21:43:13 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/06/22 22:10:42 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ static int	ft_check_table(t_table *table, int argc)
 	if (argc == 6)
 	{
 		if (table->max_meals == -1)
+			return (ft_error("max_meals: Number invalid"));
+		if (table->max_meals == 0)
 			return (ft_error("Philosopher: No need to eat"));
 	}
 	table->simulation_running = 1;

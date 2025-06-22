@@ -29,10 +29,10 @@ void	*ft_philo_routine(void *arg)
 	gettimeofday(&table->start_time, NULL);
 	philo->last_meal_time = ft_get_current_time(table);
 	philo->is_eating = 0;
-	if (table->simulation_running && (table->max_meals != 0) && (table->time_to_die) != 0)
-		ft_print_status(philo, "is thinking");
 	if (philo->id % 2 == 0)
 		usleep(table->time_to_die * 500);
+	if (table->simulation_running && (table->max_meals != 0) && (table->time_to_die) != 0)
+		ft_print_status(philo, "is thinking");
 	while (table->simulation_running && (table->max_meals != 0) && (table->time_to_die) != 0)
 	{
 		pthread_mutex_lock(&philo->left_fork->mutex);
