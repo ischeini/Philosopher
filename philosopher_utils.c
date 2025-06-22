@@ -12,18 +12,25 @@
 
 #include "philosopher.h"
 
-/*void	ft_time_unused(t_philo *philo)
+int	ft_error(char *str)
 {
-	struct timeval	unused;
-	struct timeval	tv;
-	struct timeval	a;
+	printf("%s\n", str);
+	return (-1);
+}
 
-	gettimeofday(&a, NULL);
-	gettimeofday(&tv, NULL);
-	ft_calculate(&a);
-	gettimeofday(&unused, NULL);
-	philo->unused = ft_calculate(&unused) - ft_calculate(&tv);
-}*/
+void	ft_destroy_mutex(t_table *table)
+{
+	int	i;
+
+	pthread_mutex_destroy(&table->print_mutex);
+	pthread_mutex_destroy(&table->start_mutex);
+	i = 0;
+	while (i < table->num_philos)
+	{
+		pthread_mutex_destroy(&table->forks[i].mutex);
+		i++;
+	}
+}
 
 int	ft_atoi(const char *str)
 {
@@ -32,6 +39,8 @@ int	ft_atoi(const char *str)
 
 	result = 0;
 	i = 0;
+	if (str[0] == '\0')
+		return (-1);
 	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
 	if (str[i] == '+')
@@ -50,22 +59,18 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-/*int	ft_check_args(char **args)
+long	ft_get_current_time(t_table *table)
 {
-	int	i;
-	int	j;
+	struct timeval	current;
 
-	i = 0;
-	while (args[i])
-	{
-		j = 0;
-		while (args[i][j])
-		{
-			if (args[i][j] < '0' && args[i][j] > '9')
-				return (ft_error("Args: No numbers"));
-			j++;
-		}
-		i++;
-	}
-	return (1);
-}*/
+	gettimeofday(&current, NULL);
+	return ((current.tv_sec - table->start_time.tv_sec) * 1000
+	+ (current.tv_usec - table->start_time.tv_usec) / 1000);
+}
+
+void	ft_print_status(t_philo *philo, const char *status)
+{
+	pthread_mutex_lock(&philo->table->print_mutex);
+	printf("%.06ld %d %s\n", ft_get_current_time(philo->table), philo->id, status);
+	pthread_mutex_unlock(&philo->table->print_mutex);
+}

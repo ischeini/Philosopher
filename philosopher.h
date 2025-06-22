@@ -22,39 +22,40 @@
 
 typedef struct s_fork
 {
-    pthread_mutex_t mutex;
-    int id;
+	pthread_mutex_t	mutex;
+	int				id;
 } t_fork;
 
 typedef struct s_philo
 {
-    struct s_table *table;
-    long last_meal_time;
-    t_fork *right_fork;
-    t_fork *left_fork;
-    pthread_t thread;
-    int meals_eaten;
-    int id;
+	pthread_t	thread;
+	struct		s_table *table;
+	t_fork		*right_fork;
+	t_fork		*left_fork;
+	long		last_meal_time;
+	int 		meals_eaten;
+	int			is_eating;
+	int 		id;
 } t_philo;
 
 typedef struct s_table
 {
-    pthread_mutex_t print_mutex;
-    pthread_mutex_t start_mutex;
-    struct timeval start_time;
-    int simulation_running;
-    long time_to_sleep;
-    long time_to_die;
-    long time_to_eat;
-    t_philo *philos;
-    int num_philos;
-    int max_meals;
-    t_fork *forks;
+	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	start_mutex;
+	t_philo			*philos;
+	struct			timeval start_time;
+	long			time_to_sleep;
+	long			time_to_die;
+	long			time_to_eat;
+	int				simulation_running;
+	int				num_philos;
+	int				max_meals;
+	t_fork			*forks;
 } t_table;
 
-int	ft_error(char *str);
+int		ft_error(char *str);
 
-int	ft_atoi(const char *str);
+int		ft_atoi(const char *str);
 
 void	ft_destroy_mutex(t_table *table);
 
