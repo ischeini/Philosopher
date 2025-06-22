@@ -35,6 +35,7 @@ typedef struct s_philo
 	long		last_meal_time;
 	int 		meals_eaten;
 	int			is_eating;
+	int			priority;
 	int 		id;
 } t_philo;
 

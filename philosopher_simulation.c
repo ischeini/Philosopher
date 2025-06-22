@@ -29,14 +29,17 @@ void	*ft_philo_routine(void *arg)
 	gettimeofday(&table->start_time, NULL);
 	philo->last_meal_time = ft_get_current_time(table);
 	philo->is_eating = 0;
-	if (philo->id % 2 == 0)
-		usleep(table->time_to_die * 500);
+	philo->priority = 1;
 	if (table->simulation_running && (table->max_meals != 0) && (table->time_to_die) != 0)
 		ft_print_status(philo, "is thinking");
 	while (table->simulation_running && (table->max_meals != 0) && (table->time_to_die) != 0)
 	{
-		pthread_mutex_lock(&philo->left_fork->mutex);
-		pthread_mutex_lock(&philo->right_fork->mutex);
+		if (philo->priority)
+		{
+			pthread_mutex_lock(&philo->left_fork->mutex);
+			pthread_mutex_lock(&philo->right_fork->mutex);
+			philo->priority = 0;
+		}
 		if (table->simulation_running)
 		{
 			philo->is_eating = 1;
@@ -54,8 +57,8 @@ void	*ft_philo_routine(void *arg)
 			ft_print_status(philo, "is sleeping");
 			usleep(table->time_to_sleep * 1000);
 			ft_print_status(philo, "is thinking");
+			philo->meals_eaten++;
 		}
-		philo->meals_eaten++;
 		if (table->max_meals != -1 && philo->meals_eaten >= table->max_meals)
 			break ;
 	}
@@ -90,6 +93,16 @@ void	*ft_monitor_routine(void *arg)
 					pthread_mutex_unlock(&table->print_mutex);
 					return (NULL);
 				}
+			}
+			if (i == 0)
+			{
+				if (!table->philos[table->num_philos].priority && !table->philos[i + 1].priority)
+					table->philos[i].priority = 1;
+			}
+			else
+			{
+				if (!table->philos[i - 1].priority && !table->philos[i + 1].priority)
+					table->philos[i].priority = 1;
 			}
 			i++;
 		}
