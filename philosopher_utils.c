@@ -71,6 +71,7 @@ long	ft_get_current_time(t_table *table)
 void	ft_print_status(t_philo *philo, const char *status)
 {
 	pthread_mutex_lock(&philo->table->print_mutex);
-	printf("%.06ld %d %s\n", ft_get_current_time(philo->table), philo->id, status);
+	if (philo->table->simulation_running)
+		printf("%.06ld %d %s\n", ft_get_current_time(philo->table), philo->id, status);
 	pthread_mutex_unlock(&philo->table->print_mutex);
 }

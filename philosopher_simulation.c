@@ -32,7 +32,7 @@ void	*ft_philo_routine(void *arg)
 	philo->priority = 1;
 	if (table->simulation_running && (table->max_meals != 0) && (table->time_to_die) != 0)
 		ft_print_status(philo, "is thinking");
-	while (table->simulation_running && (table->max_meals != 0) && (table->time_to_die) != 0)
+	while (table->simulation_running && (table->max_meals != 0) && (table->time_to_die) != 0 && table->num_philos != 1)
 	{
 		if (philo->priority)
 		{
@@ -73,7 +73,7 @@ void	*ft_monitor_routine(void *arg)
 	int		j;
 
 	table = (t_table *)arg;
-	usleep(1000);
+	usleep(table->time_to_die * 900);
 	while (table->simulation_running)
 	{
 		i = 0;
@@ -86,17 +86,17 @@ void	*ft_monitor_routine(void *arg)
 				lm = ft_get_current_time(table) - table->philos[i].last_meal_time;
 				if (lm > table->time_to_die && !table->philos[i].is_eating)
 				{
+					table->simulation_running = 0;
 					pthread_mutex_lock(&table->print_mutex);
 					printf("%.06ld %d died\n", ft_get_current_time(table),
 					table->philos[i].id);
-					table->simulation_running = 0;
 					pthread_mutex_unlock(&table->print_mutex);
 					return (NULL);
 				}
 			}
 			if (i == 0)
 			{
-				if (!table->philos[table->num_philos].priority && !table->philos[i + 1].priority)
+				if (!table->philos[table->num_philos - 1].priority && !table->philos[i + 1].priority)
 					table->philos[i].priority = 1;
 			}
 			else
