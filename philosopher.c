@@ -23,12 +23,9 @@ int	main(int argc, char **args)
 	if (!ft_init_table(&table, argc, args))
 		return (1);
 	pthread_mutex_lock(&table.start_mutex);
-	i = 0;
-	while (i < table.num_philos)
-	{
+	i = -1;
+	while (++i < table.num_philos)
 		pthread_create(&table.philos[i].thread, NULL, ft_philo_routine, &table.philos[i]);
-		i++;
-	}
 	pthread_create(&monitor, NULL, ft_monitor_routine, &table);
 	pthread_mutex_unlock(&table.start_mutex);
 	i = 0;

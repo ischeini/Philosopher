@@ -99,6 +99,11 @@ void	*ft_monitor_routine(void *arg)
 				if (!table->philos[table->num_philos - 1].priority && !table->philos[i + 1].priority)
 					table->philos[i].priority = 1;
 			}
+			else if (i == table->num_philos - 1)
+			{
+				if (!table->philos[table->num_philos - 1].priority && !table->philos[0].priority)
+					table->philos[i].priority = 1;
+			}
 			else
 			{
 				if (!table->philos[i - 1].priority && !table->philos[i + 1].priority)
