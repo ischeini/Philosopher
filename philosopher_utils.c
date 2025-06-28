@@ -65,13 +65,14 @@ long	ft_get_current_time(t_table *table)
 
 	gettimeofday(&current, NULL);
 	return ((current.tv_sec - table->start_time.tv_sec) * 1000
-	+ (current.tv_usec - table->start_time.tv_usec) / 1000);
+		+ (current.tv_usec - table->start_time.tv_usec) / 1000);
 }
 
 void	ft_print_status(t_philo *philo, const char *status)
 {
 	pthread_mutex_lock(&philo->table->print_mutex);
 	if (philo->table->simulation_running)
-		printf("%.06ld %d %s\n", ft_get_current_time(philo->table), philo->id, status);
+		printf("%.06ld %d %s\n",
+			ft_get_current_time(philo->table), philo->id, status);
 	pthread_mutex_unlock(&philo->table->print_mutex);
 }

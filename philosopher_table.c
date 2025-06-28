@@ -6,7 +6,7 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:19:39 by ischeini          #+#    #+#             */
-/*   Updated: 2025/06/24 13:44:33 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/06/28 14:56:07 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ static int	ft_check_table(t_table *table, int argc)
 		if (table->max_meals == 0)
 			return (ft_error("Philosopher: No need to eat"));
 	}
+	if (table->time_to_sleep == 0)
+		table->time_to_sleep = 1;
 	table->simulation_running = 1;
 	return (1);
 }

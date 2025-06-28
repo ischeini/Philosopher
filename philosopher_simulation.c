@@ -12,6 +12,33 @@
 
 #include "philosopher.h"
 
+static void	ft_simulation(t_table *table, t_philo *philo)
+{
+	pthread_mutex_lock(&philo->left_fork->mutex);
+	pthread_mutex_lock(&philo->right_fork->mutex);
+	philo->priority = 0;
+	if (table->simulation_running)
+	{
+		philo->is_eating = 1;
+		ft_print_status(philo, "has taken a fork");
+		ft_print_status(philo, "has taken a fork");
+		ft_print_status(philo, "is eating");
+		philo->last_meal_time = ft_get_current_time(table);
+		usleep(table->time_to_eat * 1000);
+		philo->last_meal_time = ft_get_current_time(table);
+		philo->is_eating = 0;
+	}
+	pthread_mutex_unlock(&philo->left_fork->mutex);
+	pthread_mutex_unlock(&philo->right_fork->mutex);
+	if (table->simulation_running)
+	{
+		ft_print_status(philo, "is sleeping");
+		usleep(table->time_to_sleep * 1000);
+		ft_print_status(philo, "is thinking");
+		philo->meals_eaten++;
+	}
+}
+
 void	*ft_philo_routine(void *arg)
 {
 	t_philo	*philo;
@@ -29,45 +56,47 @@ void	*ft_philo_routine(void *arg)
 	gettimeofday(&table->start_time, NULL);
 	philo->last_meal_time = ft_get_current_time(table);
 	philo->is_eating = 0;
-	philo->priority = 1;
-	if (table->simulation_running && (table->max_meals != 0) && (table->time_to_die) != 0)
+	if (philo->id % 2 == 0)
+		usleep(900);
+	if (table->simulation_running && (table->max_meals != 0)
+		&& (table->time_to_die) != 0)
 		ft_print_status(philo, "is thinking");
-	while (table->simulation_running && (table->max_meals != 0) && (table->time_to_die) != 0 && table->num_philos != 1)
-	{
-		if (philo->priority)
-		{
-			pthread_mutex_lock(&philo->left_fork->mutex);
-			pthread_mutex_lock(&philo->right_fork->mutex);
-			philo->priority = 0;
-		}
-		if (table->simulation_running)
-		{
-			philo->is_eating = 1;
-			ft_print_status(philo, "has taken a fork");
-			ft_print_status(philo, "has taken a fork");
-			ft_print_status(philo, "is eating");
-			usleep(table->time_to_eat * 1000);
-			philo->last_meal_time = ft_get_current_time(table);
-			philo->is_eating = 0;
-		}
-		pthread_mutex_unlock(&philo->left_fork->mutex);
-		pthread_mutex_unlock(&philo->right_fork->mutex);
-		if (table->simulation_running)
-		{
-			ft_print_status(philo, "is sleeping");
-			usleep(table->time_to_sleep * 1000);
-			ft_print_status(philo, "is thinking");
-			philo->meals_eaten++;
-		}
-		if (table->max_meals != -1 && philo->meals_eaten >= table->max_meals)
-			break ;
-	}
+	while ((table->simulation_running && (table->max_meals != 0)
+			&& (table->time_to_die) != 0 && table->num_philos != 1))
+		ft_simulation(table, philo);
 	return (NULL);
+}
+
+static t_table	*ft_is_dead(t_table *table, int i, int j)
+{
+	long	lm;
+
+	while (i < table->num_philos)
+	{
+		if (table->philos[i].meals_eaten < table->max_meals
+			|| table->max_meals == -1)
+		{
+			j = 0;
+			lm = ft_get_current_time(table) - table->philos[i].last_meal_time;
+			if (lm > table->time_to_die && !table->philos[i].is_eating)
+			{
+				table->simulation_running = 0;
+				pthread_mutex_lock(&table->print_mutex);
+				printf("%.06ld %d died\n", ft_get_current_time(table),
+					table->philos[i].id);
+				pthread_mutex_unlock(&table->print_mutex);
+				return (NULL);
+			}
+		}
+		i++;
+	}
+	if (j)
+		table->simulation_running = 0;
+	return (table);
 }
 
 void	*ft_monitor_routine(void *arg)
 {
-	long	lm;
 	t_table	*table;
 	int		i;
 	int		j;
@@ -78,41 +107,8 @@ void	*ft_monitor_routine(void *arg)
 	{
 		i = 0;
 		j = 1;
-		while (i < table->num_philos)
-		{
-			if (table->philos[i].meals_eaten < table->max_meals || table->max_meals == -1)
-			{
-				j = 0;
-				lm = ft_get_current_time(table) - table->philos[i].last_meal_time;
-				if (lm > table->time_to_die && !table->philos[i].is_eating)
-				{
-					table->simulation_running = 0;
-					pthread_mutex_lock(&table->print_mutex);
-					printf("%.06ld %d died\n", ft_get_current_time(table),
-					table->philos[i].id);
-					pthread_mutex_unlock(&table->print_mutex);
-					return (NULL);
-				}
-			}
-			if (i == 0)
-			{
-				if (!table->philos[table->num_philos - 1].priority && !table->philos[i + 1].priority)
-					table->philos[i].priority = 1;
-			}
-			else if (i == table->num_philos - 1)
-			{
-				if (!table->philos[table->num_philos - 1].priority && !table->philos[0].priority)
-					table->philos[i].priority = 1;
-			}
-			else
-			{
-				if (!table->philos[i - 1].priority && !table->philos[i + 1].priority)
-					table->philos[i].priority = 1;
-			}
-			i++;
-		}
-		if (j)
-			table->simulation_running = 0;
+		if (!ft_is_dead(table, i, j))
+			return (NULL);
 	}
 	return (NULL);
 }

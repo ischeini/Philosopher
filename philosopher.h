@@ -24,27 +24,27 @@ typedef struct s_fork
 {
 	pthread_mutex_t	mutex;
 	int				id;
-} t_fork;
+}	t_fork;
 
 typedef struct s_philo
 {
-	pthread_t	thread;
-	struct		s_table *table;
-	t_fork		*right_fork;
-	t_fork		*left_fork;
-	long		last_meal_time;
-	int 		meals_eaten;
-	int			is_eating;
-	int			priority;
-	int 		id;
-} t_philo;
+	pthread_t		thread;
+	struct s_table	*table;
+	t_fork			*right_fork;
+	t_fork			*left_fork;
+	long			last_meal_time;
+	int				meals_eaten;
+	int				is_eating;
+	int				priority;
+	int				id;
+}	t_philo;
 
 typedef struct s_table
 {
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	start_mutex;
+	struct timeval	start_time;
 	t_philo			*philos;
-	struct			timeval start_time;
 	long			time_to_sleep;
 	long			time_to_die;
 	long			time_to_eat;
@@ -52,7 +52,7 @@ typedef struct s_table
 	int				num_philos;
 	int				max_meals;
 	t_fork			*forks;
-} t_table;
+}	t_table;
 
 int		ft_error(char *str);
 
