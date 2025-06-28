@@ -44,6 +44,7 @@ typedef struct s_table
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	start_mutex;
 	struct timeval	start_time;
+	struct timeval	dif;
 	t_philo			*philos;
 	long			time_to_sleep;
 	long			time_to_die;

@@ -47,17 +47,14 @@ void	*ft_philo_routine(void *arg)
 	philo = (t_philo *)arg;
 	table = (t_table *)philo->table;
 	if (!philo->table)
-	{
-		printf("philo->table no existe\n");
 		return (NULL);
-	}
 	pthread_mutex_lock(&table->start_mutex);
 	pthread_mutex_unlock(&table->start_mutex);
 	gettimeofday(&table->start_time, NULL);
 	philo->last_meal_time = ft_get_current_time(table);
 	philo->is_eating = 0;
 	if (philo->id % 2 == 0)
-		usleep(900);
+		usleep(table->time_to_eat * 900);
 	if (table->simulation_running && (table->max_meals != 0)
 		&& (table->time_to_die) != 0)
 		ft_print_status(philo, "is thinking");
