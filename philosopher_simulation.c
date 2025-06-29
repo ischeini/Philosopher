@@ -99,6 +99,7 @@ void	*ft_monitor_routine(void *arg)
 	int		j;
 
 	table = (t_table *)arg;
+	pthread_mutex_unlock(&table->start_mutex);
 	usleep(table->time_to_die * 900);
 	while (table->simulation_running)
 	{

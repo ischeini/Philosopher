@@ -22,21 +22,21 @@ int	main(int argc, char **args)
 		return (ft_error("Argv: Amount"));
 	if (!ft_init_table(&table, argc, args))
 		return (1);
-	pthread_mutex_lock(&table.start_mutex);
 	i = -1;
 	while (++i < table.num_philos)
-		pthread_create(&table.philos[i].thread, NULL,
-			ft_philo_routine, &table.philos[i]);
-	pthread_create(&monitor, NULL, ft_monitor_routine, &table);
-	pthread_mutex_unlock(&table.start_mutex);
+	{
+		if (pthread_create(&table.philos[i].thread, NULL,
+			ft_philo_routine, &table.philos[i]) != 0)
+			table.simulation_running = 0;
+	}
+	if (pthread_create(&monitor, NULL, ft_monitor_routine, &table) != 0)
+		table.simulation_running = 0;
 	i = 0;
 	while (i < table.num_philos)
-	{
-		pthread_join(table.philos[i].thread, NULL);
-		i++;
-	}
+		pthread_join(table.philos[i++].thread, NULL);
 	pthread_join(monitor, NULL);
 	ft_destroy_mutex(&table);
 	free(table.philos);
 	free(table.forks);
+	return (0);
 }

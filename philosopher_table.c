@@ -6,7 +6,7 @@
 /*   By: ischeini <ischeini@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:19:39 by ischeini          #+#    #+#             */
-/*   Updated: 2025/06/28 14:56:07 by ischeini         ###   ########.fr       */
+/*   Updated: 2025/06/29 12:05:24 by ischeini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,5 +104,6 @@ t_table	*ft_init_table(t_table *table, int argc, char **args)
 		free(table->forks);
 		return (NULL);
 	}
+	pthread_mutex_lock(&table->start_mutex);
 	return (table);
 }
