@@ -16,7 +16,6 @@ static void	ft_simulation(t_table *table, t_philo *philo)
 {
 	pthread_mutex_lock(&philo->left_fork->mutex);
 	pthread_mutex_lock(&philo->right_fork->mutex);
-	philo->priority = 0;
 	if (table->simulation_running)
 	{
 		philo->is_eating = 1;
@@ -50,7 +49,6 @@ void	*ft_philo_routine(void *arg)
 		return (NULL);
 	pthread_mutex_lock(&table->start_mutex);
 	pthread_mutex_unlock(&table->start_mutex);
-	gettimeofday(&table->start_time, NULL);
 	philo->last_meal_time = ft_get_current_time(table);
 	philo->is_eating = 0;
 	if (philo->id % 2 == 0)
@@ -100,6 +98,7 @@ void	*ft_monitor_routine(void *arg)
 
 	table = (t_table *)arg;
 	pthread_mutex_unlock(&table->start_mutex);
+	gettimeofday(&table->start_time, NULL);
 	usleep(table->time_to_die * 900);
 	while (table->simulation_running)
 	{
