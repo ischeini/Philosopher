@@ -22,26 +22,30 @@ int	ft_error(t_sem_err error)
 		"Philosopher: Number invalid.",
 		"Die: Number invalid.",
 		"Eat: Number invalid.",
-		"Sleep: Number invalid.".
+		"Sleep: Number invalid.",
 		"Max meals: Nummer invalid.",
 		"Philosophers: No need to eat.",
-		"Error create fork"
+		"Error create fork",
+		"Argv: amount",
+		"Error open the sem",
+		"Error malloc",
+		"Negative number"
 	};
 	printf("%s\n", msg[error]);
 	return (error);
 }
 
-void	*ft_destroy_sem(sem_t *sem, char *names)
+void	*ft_destroy_sem(sem_t **sem, char **names, int nbr)
 {
 	int	i;
 
 	i = 0;
-	while (i < 6)
+	while (i < nbr)
 	{
-		if (sem[i] && sem_close(semaphores[i] == -1))
+		if (sem[i] && sem_close(sem[i]) == -1)
 		{
 			ft_error(PH_SEM_CLOSE);
-			if (sem_unlink(names[i] == -1))
+			if (sem_unlink(names[i]) == -1)
 				ft_error(PH_SEM_DELET);
 		}
 		i++;
@@ -63,7 +67,7 @@ int	ft_atoi(const char *str)
 	if (str[i] == '+')
 		i++;
 	else if (str[i] == '-')
-		return (ft_error("Negative number"));
+		return (ft_error(PH_NEGATIVE));
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		if (result > (INT_MAX - (str[i] - '0')) / 10)

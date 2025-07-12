@@ -22,6 +22,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+# include <fcntl.h>
 # include <stdio.h>
 
 typedef	enum	e_sem_err
@@ -37,12 +38,16 @@ typedef	enum	e_sem_err
 	PH_INV_MEALS,
 	PH_MEALS_ZERO,
 	PH_FORK,
+	PH_AMOUNT,
+	PH_SEM_OPEN,
+	PH_MALLOC,
+	PH_NEGATIVE,
 }	t_sem_err;
 
 typedef struct s_sem
 {
-	sem_t	*sem;
-	char	names;
+	sem_t	**sem;
+	char	**names;
 }	t_sem;
 
 typedef struct s_philo
@@ -61,20 +66,27 @@ typedef struct s_table
 	pthread_t		meals_eat;
 	pthread_t		dead;
 	t_philo			*philos;
+	t_sem			*meals_id;
 	t_sem			*sem;
-	sem_t			*start_sem;
-	sem_t			*print_sem;
-	sem_t			*dead_sem;
-	sem_t			*wait_sem1;
-	sem_t			*wait_sem2;
-	sem_t			*eat_sem;
 	long			time_to_sleep;
 	long			time_to_die;
 	long			time_to_eat;
 	char			*names;
-	int				*sem;
 	int				max_meals;
 	int				num_phi;
 }	t_table;
+
+t_table	*ft_init_table(t_table *table, int argc, char **args);
+
+t_table	*ft_create_meal(t_table *table);
+
+sem_t	*ft_create_sem(t_table *table, char *str, int num, int pos);
+
+long	ft_get_current_time(t_table *table);
+
+void	*ft_destroy_sem(sem_t **sem, char **names, int nbr);
+
+int	ft_error(t_sem_err error);
+int	ft_atoi(const char *str);
 
 #endif

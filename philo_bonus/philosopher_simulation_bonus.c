@@ -30,17 +30,3 @@ void	ft_simulation(t_table *table)
 	pthread_create(table->dead, NULL, ft_monitor_dead, table);
 	pthread_create(table->meals_eat, NULL, ft_monitor_meals_eat, table);
 }
-
-
-
-while (n < philo)
-{
-	pid = fork();
-	while (1)
-	{
-		if (!pid)
-			ft_check_death();
-		else if (pid)
-			ft_simulate_philo();
-	}
-}
