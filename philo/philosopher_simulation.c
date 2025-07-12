@@ -59,6 +59,7 @@ void	*ft_philo_routine(void *arg)
 	while ((table->simulation_running && (table->max_meals != 0)
 			&& (table->time_to_die) != 0 && table->num_philos != 1))
 		ft_simulation(table, philo);
+	usleep(table->time_to_die * 1000);
 	return (NULL);
 }
 
@@ -77,8 +78,7 @@ static t_table	*ft_is_dead(t_table *table, int i, int j)
 			{
 				table->simulation_running = 0;
 				pthread_mutex_lock(&table->print_mutex);
-				printf("%.06ld %d died\n", ft_get_current_time(table),
-					table->philos[i].id);
+				printf("%.06ld %d died\n", lm, table->philos[i].id);
 				pthread_mutex_unlock(&table->print_mutex);
 				return (NULL);
 			}
@@ -97,8 +97,8 @@ void	*ft_monitor_routine(void *arg)
 	int		j;
 
 	table = (t_table *)arg;
-	pthread_mutex_unlock(&table->start_mutex);
 	gettimeofday(&table->start_time, NULL);
+	pthread_mutex_unlock(&table->start_mutex);
 	usleep(table->time_to_die * 900);
 	while (table->simulation_running)
 	{

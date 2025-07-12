@@ -26,7 +26,7 @@ int	main(int argc, char **args)
 	while (++i < table.num_philos)
 	{
 		if (pthread_create(&table.philos[i].thread, NULL,
-			ft_philo_routine, &table.philos[i]) != 0)
+				ft_philo_routine, &table.philos[i]) != 0)
 			table.simulation_running = 0;
 	}
 	if (pthread_create(&monitor, NULL, ft_monitor_routine, &table) != 0)
