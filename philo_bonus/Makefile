@@ -5,10 +5,10 @@ OBJDIR = obj/
 
 FLAGS = -Wall -Wextra -Werror -g
 
-SRC	=	${SRCDIR}philosopher_bonus.c				\
-		${SRCDIR}philosopher_utils_bonus.c			\
-		${SRCDIR}philosopher_table_bonus.c			\
-		${SRCDIR}philosopher_sem_meals_bonus.c		\
+SRC	=	${SRCDIR}philosopher_bonus.c		\
+		${SRCDIR}philosopher_utils_bonus.c	\
+		${SRCDIR}philosopher_table_bonus.c	\
+		${SRCDIR}philosopher_error_bonus.c	\
 
 OBJ = ${SRC:${SRCDIR}%.c=${OBJDIR}%.o}
 

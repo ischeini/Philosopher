@@ -25,10 +25,21 @@
 # include <fcntl.h>
 # include <stdio.h>
 
+typedef	enum	e_sem
+{
+	PH_SEM_START = 0,
+	PH_SEM_PRINT,
+	PH_SEM_DEAD,
+	PH_SEM_EAT,
+	PH_SEM_WAI,
+	PH_SEM_FORKS,
+	PH_SEM_MEALS,
+}	t_sem;
+
 typedef	enum	e_sem_err
 {
-	PH_SUCCESS = 0,	//Success
-	PH_SEM_CLOSE,	//Error closing a semaphore
+	PH_SUCCESS = 0,
+	PH_SEM_CLOSE,
 	PH_SEM_DELET,
 	PH_SEM_WAIT,
 	PH_INV_PHILO,
@@ -43,12 +54,6 @@ typedef	enum	e_sem_err
 	PH_MALLOC,
 	PH_NEGATIVE,
 }	t_sem_err;
-
-typedef struct s_sem
-{
-	sem_t	**sem;
-	char	**names;
-}	t_sem;
 
 typedef struct s_philo
 {
@@ -66,27 +71,32 @@ typedef struct s_table
 	pthread_t		meals_eat;
 	pthread_t		dead;
 	t_philo			*philos;
-	t_sem			*meals_id;
-	t_sem			*sem;
+	sem_t			*sem_start;
+	sem_t			*sem_meals_eat;
+	sem_t			*sem_print;
+	sem_t			*sem_dead;
+	sem_t			*sem_wait;
+	sem_t			*sem_forks;
+	sem_t			*sem_eat;
 	long			time_to_sleep;
 	long			time_to_die;
 	long			time_to_eat;
-	char			*names;
 	int				max_meals;
 	int				num_phi;
 }	t_table;
 
-t_table	*ft_init_table(t_table *table, int argc, char **args);
-
-t_table	*ft_create_meal(t_table *table);
-
-sem_t	*ft_create_sem(t_table *table, char *str, int num, int pos);
+t_table	*ft_init_table(int argc, char **args);
 
 long	ft_get_current_time(t_table *table);
 
-void	*ft_destroy_sem(sem_t **sem, char **names, int nbr);
+const char	*ft_sem_name(t_sem name);
 
-int	ft_error(t_sem_err error);
-int	ft_atoi(const char *str);
+void	*ft_error_null(t_sem_err error);
+void	*ft_sem_error(t_sem_err error, t_table *table, int i);
+void	ft_free(t_table *table);
+void	ft_sem_unlink();
+int		ft_error_int(t_sem_err error);
+int		ft_atoi(const char *str);
+
 
 #endif

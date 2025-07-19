@@ -12,45 +12,30 @@
 
 #include "philosopher_bonus.h"
 
-int	ft_error(t_sem_err error)
+void	ft_sem_unlink()
 {
-	const char *msg[] = {
-		"Success."
-		"Error to close the sem.",
-		"Error to eliminate the sem.",
-		"Error to wait the sem.",
-		"Philosopher: Number invalid.",
-		"Die: Number invalid.",
-		"Eat: Number invalid.",
-		"Sleep: Number invalid.",
-		"Max meals: Nummer invalid.",
-		"Philosophers: No need to eat.",
-		"Error create fork",
-		"Argv: amount",
-		"Error open the sem",
-		"Error malloc",
-		"Negative number"
-	};
-	printf("%s\n", msg[error]);
-	return (error);
+	sem_unlink("/start_sem");
+	sem_unlink("/print_sem");
+	sem_unlink("/dead_sem");
+	sem_unlink("/eat_sem");
+	sem_unlink("/wait_sem");
+	sem_unlink("/fork_sem");
+	sem_unlink("/meals_eat_sem");
 }
 
-void	*ft_destroy_sem(sem_t **sem, char **names, int nbr)
-{
-	int	i;
+const char	*ft_sem_name(t_sem name)
 
-	i = 0;
-	while (i < nbr)
-	{
-		if (sem[i] && sem_close(sem[i]) == -1)
-		{
-			ft_error(PH_SEM_CLOSE);
-			if (sem_unlink(names[i]) == -1)
-				ft_error(PH_SEM_DELET);
-		}
-		i++;
-	}
-	return (NULL);
+{
+	const char *sem[] = {
+		"/start_sem",
+		"/print_sem",
+		"/dead_sem",
+		"/eat_sem",
+		"/wait_sem",
+		"/fork_sem",
+		"/meals_eat_sem",
+	};
+	return (sem[name]);
 }
 
 int	ft_atoi(const char *str)
@@ -67,7 +52,7 @@ int	ft_atoi(const char *str)
 	if (str[i] == '+')
 		i++;
 	else if (str[i] == '-')
-		return (ft_error(PH_NEGATIVE));
+		return (ft_error_int(PH_NEGATIVE));
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		if (result > (INT_MAX - (str[i] - '0')) / 10)
