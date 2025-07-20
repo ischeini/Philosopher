@@ -22,9 +22,14 @@ int	main(int argc, char **args)
 	table = ft_init_table(argc, args);
 	if (!table)
 		return (1);
-	debug_table(table);
-	debug_philo(table->philos);
+	if (!ft_create_philo_sem(table))
+	{
+		ft_sem_error(0, table, 0);
+		ft_free(table);
+		return (1);
+	}
+	ft_start_simulation(table);
 	ft_sem_error(0, table, 0);
 	ft_free(table);
-	return (ft_error_int(PH_SUCCESS));
+	return (0);
 }

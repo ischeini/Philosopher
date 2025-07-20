@@ -12,26 +12,25 @@
 
 #include "philosopher_bonus.h"
 
-static t_table	*ft_create_sem(t_table *table)
+static t_table	*ft_create_sem(t_table *table, int i)
 {
-	table->sem_start = sem_open(ft_sem_name(PH_SEM_START), O_CREAT, 0660, 1);
+	table->sem_start = sem_open(ft_sem_name(PH_SEM_START), O_CREAT, 0660, 0);
 	if (table->sem_start == SEM_FAILED)
 		return (ft_sem_error(PH_SEM_OPEN, table, 1));
 	table->sem_print = sem_open(ft_sem_name(PH_SEM_PRINT), O_CREAT, 0660, 1);
 	if (table->sem_print == SEM_FAILED)
 		return (ft_sem_error(PH_SEM_OPEN, table, 1));
 	table->sem_forks = sem_open(ft_sem_name(PH_SEM_FORKS), O_CREAT, 0660,
-			(table->num_phi / 2));
+			(i / 2));
 	if (table->sem_forks == SEM_FAILED)
 		return (ft_sem_error(PH_SEM_OPEN, table, 1));
-	table->sem_dead = sem_open(ft_sem_name(PH_SEM_DEAD), O_CREAT, 0660, table->num_phi);
+	table->sem_dead = sem_open(ft_sem_name(PH_SEM_DEAD), O_CREAT, 0660, 0);
 	if (table->sem_dead == SEM_FAILED)
 		return (ft_sem_error(PH_SEM_OPEN, table, 1));
 	table->sem_wait = sem_open(ft_sem_name(PH_SEM_WAI), O_CREAT, 0660, 1);
 	if (table->sem_wait == SEM_FAILED)
 		return (ft_sem_error(PH_SEM_OPEN, table, 1));
-	table->sem_eat = sem_open(ft_sem_name(PH_SEM_EAT), O_CREAT, 0660,
-			(table->num_phi / 2));
+	table->sem_eat = sem_open(ft_sem_name(PH_SEM_EAT), O_CREAT, 0660, (i / 2));
 	if (table->sem_eat == SEM_FAILED)
 		return (ft_sem_error(PH_SEM_OPEN, table, 1));
 	table->sem_meals_eat = sem_open(ft_sem_name(PH_SEM_MEALS), O_CREAT,
@@ -71,7 +70,7 @@ static t_philo	*ft_create_phi(t_table *table)
 	if (!philos)
 	{
 		ft_sem_error(PH_SEM_OPEN, table, 0);
-		ft_free(table);	
+		ft_free(table);
 		return (ft_error_null(PH_MALLOC));
 	}
 	while (i < table->num_phi)
@@ -103,9 +102,9 @@ t_table	*ft_init_table(int argc, char **args)
 	if (argc == 5)
 		table->max_meals = -1;
 	ft_sem_unlink();
-	if (!ft_create_sem(table))
+	if (!ft_create_sem(table, table->num_phi))
 	{
-		ft_free(table);	
+		ft_free(table);
 		return (NULL);
 	}
 	table->philos = ft_create_phi(table);

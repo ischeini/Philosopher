@@ -12,7 +12,7 @@
 
 #include "philosopher_bonus.h"
 
-void	ft_sem_unlink()
+void	ft_sem_unlink(void)
 {
 	sem_unlink("/start_sem");
 	sem_unlink("/print_sem");
@@ -26,7 +26,7 @@ void	ft_sem_unlink()
 const char	*ft_sem_name(t_sem name)
 
 {
-	const char *sem[] = {
+	const char	*sem[] = {
 		"/start_sem",
 		"/print_sem",
 		"/dead_sem",
@@ -35,6 +35,7 @@ const char	*ft_sem_name(t_sem name)
 		"/fork_sem",
 		"/meals_eat_sem",
 	};
+
 	return (sem[name]);
 }
 
@@ -72,4 +73,14 @@ long	ft_get_current_time(t_table *table)
 	gettimeofday(&current, NULL);
 	return ((current.tv_sec - table->start_time.tv_sec) * 1000
 		+ (current.tv_usec - table->start_time.tv_usec) / 1000);
+}
+
+void	ft_print_status(t_philo *philo, const char *status)
+{
+	long	time;
+
+	time = ft_get_current_time(philo->table);
+	sem_wait(philo->table->sem_print);
+	printf("%.06ld %d %s\n", time, philo->id, status);
+	sem_post(philo->table->sem_print);
 }
