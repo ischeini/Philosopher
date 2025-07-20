@@ -68,7 +68,7 @@ static t_table	*ft_is_dead(t_table *table, int i, int j)
 {
 	long	lm;
 
-	while (i < table->num_philos)
+	while (++i < table->num_philos)
 	{
 		if (table->philos[i].meals_eaten < table->max_meals
 			|| table->max_meals == -1)
@@ -81,12 +81,12 @@ static t_table	*ft_is_dead(t_table *table, int i, int j)
 			{
 				table->simulation_running = 0;
 				pthread_mutex_lock(&table->print_mutex);
-				printf("%.06ld %d died\n", lm, table->philos[i].id);
+				printf("%.06ld %d died\n", ft_get_current_time(table),
+					table->philos[i].id);
 				pthread_mutex_unlock(&table->print_mutex);
 				return (NULL);
 			}
 		}
-		i++;
 	}
 	if (j)
 		table->simulation_running = 0;
@@ -106,7 +106,7 @@ void	*ft_monitor_routine(void *arg)
 	usleep(table->time_to_die * 900);
 	while (table->simulation_running)
 	{
-		i = 0;
+		i = -1;
 		j = 1;
 		if (!ft_is_dead(table, i, j))
 			return (NULL);
