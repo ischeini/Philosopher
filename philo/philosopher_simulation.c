@@ -58,7 +58,8 @@ void	*ft_philo_routine(void *arg)
 	if (philo->id % 2 == 0)
 		usleep(table->time_to_eat * 900);
 	while ((table->simulation_running && (table->max_meals != 0)
-			&& (table->time_to_die) != 0 && table->num_philos != 1))
+			&& (table->time_to_die) != 0 && table->num_philos != 1)
+		&& philo->meals_eaten < table->max_meals)
 		ft_simulation(table, philo);
 	usleep(table->time_to_die * 1100);
 	return (NULL);
