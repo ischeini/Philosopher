@@ -52,15 +52,15 @@ void	*ft_philo_routine(void *arg)
 	pthread_mutex_lock(&table->start_mutex);
 	pthread_mutex_unlock(&table->start_mutex);
 	philo->last_meal_time = ft_get_current_time(table);
-	if (philo->id % 2 == 0)
-		usleep(table->time_to_eat * 900);
 	if (table->simulation_running && (table->max_meals != 0)
 		&& (table->time_to_die) != 0)
 		ft_print_status(philo, "is thinking");
+	if (philo->id % 2 == 0)
+		usleep(table->time_to_eat * 900);
 	while ((table->simulation_running && (table->max_meals != 0)
 			&& (table->time_to_die) != 0 && table->num_philos != 1))
 		ft_simulation(table, philo);
-	usleep(table->time_to_die * 1000);
+	usleep(table->time_to_die * 1100);
 	return (NULL);
 }
 
